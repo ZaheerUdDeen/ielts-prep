@@ -1,0 +1,156 @@
+// Home (skills), Skill (sections) and Section overview screens.
+import { skills, cardKey } from '../data/catalog.js'
+import { navigate } from '../lib/router.js'
+import { useMastery } from '../lib/mastery.js'
+import { TopBar, Tile, ProgressRing } from '../components/Chrome.jsx'
+import { Icon } from '../components/Icons.jsx'
+
+function countKnown(skillId, section, mastered) {
+  if (!section.deck) return 0
+  return section.deck.tactics.filter((t) => mastered[cardKey(skillId, section.id, t.id)]).length
+}
+
+export function Home() {
+  return (
+    <div className="screen">
+      <header className="hero">
+        <p className="hero__eyebrow">IELTS Prep</p>
+        <h1 className="hero__title">Tactic cards</h1>
+        <p className="hero__sub">Swipe. Glance. Remember.</p>
+      </header>
+      <main className="grid grid--2">
+        {skills.map((s, i) => (
+          <Tile
+            key={s.id}
+            label={s.label}
+            icon={s.icon}
+            disabled={!s.enabled}
+            accent={`skill-${i}`}
+            onClick={() => navigate(`/${s.id}`)}
+          />
+        ))}
+      </main>
+    </div>
+  )
+}
+
+export function SkillScreen({ skill }) {
+  const { mastered } = useMastery()
+  return (
+    <div className="screen">
+      <TopBar title={skill.label} back="/" />
+      <main className="grid grid--2">
+        {skill.sections.map((sec) => {
+          const total = sec.deck?.tactics.length || 0
+          const known = countKnown(skill.id, sec, mastered)
+          return (
+            <Tile
+              key={sec.id}
+              label={sec.label}
+              subtitle={sec.subtitle}
+              accent={total ? 'live' : 'empty'}
+              meta={
+                total ? (
+                  <>
+                    <span className="meter">
+                      <span className="meter__fill" style={{ width: `${(known / total) * 100}%` }} />
+                    </span>
+                    {total} cards · {known} known
+                  </>
+                ) : (
+                  'Coming soon'
+                )
+              }
+              onClick={() => navigate(`/${skill.id}/${sec.id}`)}
+            />
+          )
+        })}
+      </main>
+    </div>
+  )
+}
+
+export function SectionScreen({ skill, section }) {
+  const { mastered } = useMastery()
+  const base = `/${skill.id}/${section.id}`
+
+  if (!section.deck) {
+    return (
+      <div className="screen">
+        <TopBar title={section.label} back={`/${skill.id}`} />
+        <main className="empty">
+          <div className="empty__art" aria-hidden="true">
+            <Icon name="cards" size={56} />
+          </div>
+          <h2>{section.label} cards are coming soon</h2>
+          <p>Tactics for this section haven&rsquo;t been written yet. Check back after the next guide is added.</p>
+          <button type="button" className="btn btn--ghost" onClick={() => navigate(`/${skill.id}`)}>
+            Back to {skill.label}
+          </button>
+        </main>
+      </div>
+    )
+  }
+
+  const { families, tactics } = section.deck
+  const known = countKnown(skill.id, section, mastered)
+  const learning = tactics.length - known
+
+  return (
+    <div className="screen">
+      <TopBar title={section.label} back={`/${skill.id}`} />
+      <main className="overview">
+        <div className="overview__top">
+          <ProgressRing value={known} total={tactics.length} />
+          <div className="overview__actions">
+            <button type="button" className="btn btn--primary" onClick={() => navigate(`${base}/deck`)}>
+              Study all {tactics.length}
+            </button>
+            <button
+              type="button"
+              className="btn btn--ghost"
+              disabled={!learning}
+              onClick={() => navigate(`${base}/deck?mode=learning`)}
+            >
+              {learning ? `Still learning (${learning})` : 'All mastered!'}
+            </button>
+          </div>
+        </div>
+
+        <ul className="families">
+          {families.map((f) => {
+            const items = tactics.filter((t) => t.family === f.id)
+            return (
+              <li key={f.id} className={`family tone-${f.tone}`}>
+                <div className="family__head">
+                  <span className="family__swatch" />
+                  <span className="family__name">
+                    {f.id}x · {f.name}
+                  </span>
+                </div>
+                <p className="family__tip">{f.tip}</p>
+                <div className="family__chips">
+                  {items.map((t) => {
+                    const isKnown = !!mastered[cardKey(skill.id, section.id, t.id)]
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        className={`chip ${isKnown ? 'chip--known' : ''}`}
+                        onClick={() => navigate(`${base}/deck?start=${t.id}`)}
+                        title={t.title}
+                      >
+                        {t.id}
+                        {isKnown && <Icon name="star" size={11} filled />}
+                      </button>
+                    )
+                  })}
+                </div>
+              </li>
+            )
+          })}
+        </ul>
+      </main>
+    </div>
+  )
+}
