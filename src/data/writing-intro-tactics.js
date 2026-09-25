@@ -27,7 +27,8 @@
 //   large on every card of that family and on the overview screen.
 // tactic.polarity: 'do' (green check) | 'dont' (red cross)
 // tactic.visual.type: 'morph' | 'swap' | 'merge' | 'test' | 'dial' | 'blocks' | 'banned'
-//   (renderers live in src/components/Visual.jsx)
+//   | 'contrast' | 'grid'   (renderers live in src/components/Visual.jsx;
+//   see writing-body1-tactics.js for contrast/grid examples)
 //
 // formula (optional): a `type: 'formula'` anchor card shown before the first
 // tactic. It is a reference card only: it has no Known toggle and never counts

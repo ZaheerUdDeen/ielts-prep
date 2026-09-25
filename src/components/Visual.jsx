@@ -107,16 +107,17 @@ function Dial({ left, middle, right }) {
   )
 }
 
-function Blocks({ blocks }) {
+function Blocks({ blocks, paper = 'INTRO' }) {
   return (
-    <div className="v-blocks" role="img" aria-label={`Intro contains: ${blocks.map((b) => b.label).join(', ')}`}>
-      <div className="v-blocks__paper">
+    <div className="v-blocks" role="img" aria-label={`${paper} contains: ${blocks.map((b) => b.label).join(', ')}`}>
+      <div className="v-blocks__paper" data-paper={paper}>
         {blocks.map((b, i) => (
           <div key={i} className="v-blocks__row">
             {i > 0 && <span className="v-blocks__plus">+</span>}
             <span className={`v-block v-block--${b.kind}`}>
               {b.kind === 'view' && <Icon name="star" size={16} filled />}
               {b.kind === 'hold' && <span className="v-block__pause" aria-hidden="true">❚❚</span>}
+              {b.kind === 'cut' && <Icon name="cross" size={16} />}
               {b.label}
             </span>
           </div>
@@ -140,7 +141,90 @@ function Banned({ phrase, badge }) {
   )
 }
 
-const renderers = { morph: Morph, swap: Swap, merge: Merge, test: Test, dial: Dial, blocks: Blocks, banned: Banned }
+// Tiny inline glyphs for `contrast` rows: a pair of people vs a lightbulb.
+function Glyph({ name }) {
+  if (name === 'people') {
+    return (
+      <svg className="v-glyph" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="11" cy="10" r="4.5" />
+        <path d="M3 27c0-5 3.6-8.5 8-8.5s8 3.5 8 8.5" />
+        <circle cx="22" cy="11.5" r="3.8" />
+        <path d="M20 19.4c.6-.2 1.3-.3 2-.3 3.9 0 7 3.1 7 7.4" />
+      </svg>
+    )
+  }
+  return (
+    <svg className="v-glyph" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 4a8.5 8.5 0 0 0-5 15.4c.8.6 1.3 1.6 1.3 2.6v1h7.4v-1c0-1 .5-2 1.3-2.6A8.5 8.5 0 0 0 16 4z" />
+      <path d="M12.8 27h6.4M14 30h4" />
+    </svg>
+  )
+}
+
+function Contrast({ rows }) {
+  return (
+    <div className="v-contrast">
+      {rows.map((r, i) => (
+        <div key={i} className={`v-contrast__row v-contrast__row--${r.ok ? 'ok' : 'no'}`}>
+          <span className="v-contrast__icon">
+            <Glyph name={r.icon} />
+          </span>
+          <div className="v-contrast__body">
+            <span className="v-contrast__label">
+              <Icon name={r.ok ? 'check' : 'cross'} size={13} /> {r.label}
+            </span>
+            <Marked text={r.text} className="v-contrast__text" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const MARKS = { yes: ['check', 'Yes'], no: ['cross', 'No'], opt: [null, 'Optional'] }
+
+function Grid({ head, rows, footer }) {
+  return (
+    <div className="v-grid">
+      {head && (
+        <div className="v-grid__head">
+          <span>{head[0]}</span>
+          <span>{head[1]}</span>
+        </div>
+      )}
+      <ul className="v-grid__rows">
+        {rows.map((r, i) => {
+          const [icon, word] = MARKS[r.mark] || MARKS.opt
+          return (
+            <li key={i} className={`v-grid__row v-grid__row--${r.mark}`}>
+              <div className="v-grid__cell">
+                <span className="v-grid__label">{r.label}</span>
+                {r.text && <Marked text={r.text} className="v-grid__text" />}
+                {r.note && <span className="v-grid__note">{r.note}</span>}
+              </div>
+              <span className="v-grid__mark" aria-label={word} title={word}>
+                {icon ? <Icon name={icon} size={16} /> : '~'}
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+      {footer && <Marked as="p" text={footer} className="v-grid__footer" />}
+    </div>
+  )
+}
+
+const renderers = {
+  morph: Morph,
+  swap: Swap,
+  merge: Merge,
+  test: Test,
+  dial: Dial,
+  blocks: Blocks,
+  banned: Banned,
+  contrast: Contrast,
+  grid: Grid,
+}
 
 export function Visual({ visual }) {
   const R = renderers[visual?.type]

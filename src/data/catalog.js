@@ -3,6 +3,7 @@
 // `writing-intro-tactics.js` and assign it to `deck` below. That's it.
 
 import writingIntro from './writing-intro-tactics.js'
+import writingBody1 from './writing-body1-tactics.js'
 
 export const skills = [
   {
@@ -12,7 +13,7 @@ export const skills = [
     enabled: true,
     sections: [
       { id: 'intro', label: 'Intro', subtitle: 'STAR formula', deck: writingIntro },
-      { id: 'body1', label: 'Body 1', subtitle: 'First argument', deck: null },
+      { id: 'body1', label: 'Body 1', subtitle: 'CASE formula', deck: writingBody1 },
       { id: 'body2', label: 'Body 2', subtitle: 'Second argument', deck: null },
       { id: 'conclusion', label: 'Conclusion', subtitle: 'Land the position', deck: null },
     ],
