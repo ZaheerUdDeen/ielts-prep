@@ -4,6 +4,7 @@
 
 import writingIntro from './writing-intro-tactics.js'
 import writingBody1 from './writing-body1-tactics.js'
+import writingBody2 from './writing-body2-tactics.js'
 
 export const skills = [
   {
@@ -14,7 +15,7 @@ export const skills = [
     sections: [
       { id: 'intro', label: 'Intro', subtitle: 'STAR formula', deck: writingIntro },
       { id: 'body1', label: 'Body 1', subtitle: 'CASE formula', deck: writingBody1 },
-      { id: 'body2', label: 'Body 2', subtitle: 'Second argument', deck: null },
+      { id: 'body2', label: 'Body 2', subtitle: 'PAIR formula', deck: writingBody2 },
       { id: 'conclusion', label: 'Conclusion', subtitle: 'Land the position', deck: null },
     ],
   },

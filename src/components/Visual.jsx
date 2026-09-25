@@ -189,22 +189,25 @@ function Grid({ head, rows, footer }) {
       {head && (
         <div className="v-grid__head">
           <span>{head[0]}</span>
-          <span>{head[1]}</span>
+          {head[1] && <span>{head[1]}</span>}
         </div>
       )}
       <ul className="v-grid__rows">
         {rows.map((r, i) => {
+          // `mark` is optional: rows without one render as a plain descriptive row.
           const [icon, word] = MARKS[r.mark] || MARKS.opt
           return (
-            <li key={i} className={`v-grid__row v-grid__row--${r.mark}`}>
+            <li key={i} className={`v-grid__row v-grid__row--${r.mark || 'plain'}`}>
               <div className="v-grid__cell">
                 <span className="v-grid__label">{r.label}</span>
                 {r.text && <Marked text={r.text} className="v-grid__text" />}
                 {r.note && <span className="v-grid__note">{r.note}</span>}
               </div>
-              <span className="v-grid__mark" aria-label={word} title={word}>
-                {icon ? <Icon name={icon} size={16} /> : '~'}
-              </span>
+              {r.mark && (
+                <span className="v-grid__mark" aria-label={word} title={word}>
+                  {icon ? <Icon name={icon} size={16} /> : '~'}
+                </span>
+              )}
             </li>
           )
         })}
