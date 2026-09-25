@@ -38,12 +38,26 @@ function Example({ example }) {
 
 export function TacticCard({ tactic, family, familyIndex, familySize, known }) {
   const isDont = tactic.polarity === 'dont'
+  const star = family.star
   return (
-    <article className={`card tone-${family.tone}`} aria-label={`${tactic.id}: ${tactic.title}`}>
+    <article
+      className={`card tone-${family.tone}`}
+      aria-label={`${star ? `${star.letter} ${star.word}, ` : ''}${tactic.id}: ${tactic.title}`}
+    >
       <header className="card__head">
-        <span className="card__badge">{tactic.id}</span>
+        {star ? (
+          <span className="card__star" title={star.action}>
+            <span className="card__star-letter">{star.letter}</span>
+            <span className="card__star-word">{star.word}</span>
+          </span>
+        ) : (
+          <span className="card__badge">{tactic.id}</span>
+        )}
         <div className="card__family">
-          <span className="card__family-name">{family.name}</span>
+          <span className="card__family-name">
+            {star && <span className="card__legacy-id">{tactic.id}</span>}
+            {family.name}
+          </span>
           <span className="card__family-pos">
             {familyIndex + 1} of {familySize}
             {known && (
@@ -68,6 +82,43 @@ export function TacticCard({ tactic, family, familyIndex, familySize, known }) {
           <Visual visual={tactic.visual} />
         </div>
         <Example example={tactic.example} />
+      </div>
+    </article>
+  )
+}
+
+/** Master-formula anchor card (e.g. STAR). Poster layout, one coloured
+ *  letter per family, in deck order. Reference only: no mastery state. */
+export function FormulaCard({ formula, families }) {
+  const steps = families.filter((f) => f.star)
+  return (
+    <article className="card card--formula" aria-label={`${formula.word}: ${formula.title}`}>
+      <div className="formula">
+        <div className="formula__eyebrow">
+          <Icon name="star" size={16} filled />
+          {formula.title}
+        </div>
+        <div className="formula__word" aria-hidden="true">
+          {steps.map((f) => (
+            <span key={f.id} className={`formula__letter tone-${f.tone}`}>
+              {f.star.letter}
+            </span>
+          ))}
+        </div>
+        <ol className="formula__steps">
+          {steps.map((f) => (
+            <li key={f.id} className={`formula__step tone-${f.tone}`}>
+              <span className="formula__step-letter">{f.star.letter}</span>
+              <span className="formula__step-text">
+                <strong>{f.star.action}</strong>
+                <span>
+                  {f.id}x · {f.name}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p className="formula__why">{formula.why}</p>
       </div>
     </article>
   )

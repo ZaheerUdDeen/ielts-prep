@@ -11,7 +11,7 @@ export const skills = [
     icon: 'pen',
     enabled: true,
     sections: [
-      { id: 'intro', label: 'Intro', subtitle: 'Paraphrase + position', deck: writingIntro },
+      { id: 'intro', label: 'Intro', subtitle: 'STAR formula', deck: writingIntro },
       { id: 'body1', label: 'Body 1', subtitle: 'First argument', deck: null },
       { id: 'body2', label: 'Body 2', subtitle: 'Second argument', deck: null },
       { id: 'conclusion', label: 'Conclusion', subtitle: 'Land the position', deck: null },

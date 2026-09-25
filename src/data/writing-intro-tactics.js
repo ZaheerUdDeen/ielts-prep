@@ -1,9 +1,18 @@
 // Writing > Task 2 > Introduction tactics.
 // Source: Obsidian note "Writing/Introduction-Guide.md".
 //
+// MASTER FORMULA: STAR — the exam-time order in which the tactics fire.
+//   S  Spot the type       -> T3x (intro shape by question type)
+//   T  Twist the sentence  -> T1x (paraphrase by restructuring)
+//   A  Assert your stance  -> T2x (decided position)
+//   R  Refuse clichés      -> T4x (banned openers)
+// Array order below IS the deck order (S -> T -> A -> R). T-IDs are legacy
+// labels and are never renumbered, so progress keys like `writing/intro:T31`
+// stay stable.
+//
 // HOW TO AUTHOR A NEW SECTION (e.g. Body 1):
 //   1. Copy this file to `writing-body1-tactics.js`.
-//   2. Edit `families` and `tactics` below.
+//   2. Edit `families` and `tactics` below (and `formula`, or drop it).
 //   3. Import it in `src/data/catalog.js` and set it as that section's `deck`.
 // No component changes are needed.
 //
@@ -12,134 +21,60 @@
 //
 // family.tone must be one of: 'teal' | 'violet' | 'amber' | 'rose'
 //   (palette lives in src/index.css as --teal, --violet, ...)
+// family.star (optional): { letter, word, action } — the formula letter shown
+//   large on every card of that family and on the overview screen.
 // tactic.polarity: 'do' (green check) | 'dont' (red cross)
 // tactic.visual.type: 'morph' | 'swap' | 'merge' | 'test' | 'dial' | 'blocks' | 'banned'
 //   (renderers live in src/components/Visual.jsx)
+//
+// formula (optional): a `type: 'formula'` anchor card shown before the first
+// tactic. It is a reference card only: it has no Known toggle and never counts
+// toward mastery (it is not part of `tactics`).
 
+// Families are listed in STAR (exam-time) order, not by legacy number.
 export const families = [
+  {
+    id: 'T3',
+    name: 'Intro shape',
+    tone: 'amber',
+    star: { letter: 'S', word: 'Spot', action: 'Spot the type' },
+    tip: 'Read the last line first. Count the question marks.',
+  },
   {
     id: 'T1',
     name: 'Paraphrase',
     tone: 'teal',
+    star: { letter: 'T', word: 'Twist', action: 'Twist the sentence' },
     tip: 'Change the structure first, the words second.',
   },
   {
     id: 'T2',
     name: 'Position',
     tone: 'violet',
+    star: { letter: 'A', word: 'Assert', action: 'Assert your stance' },
     tip: 'A stranger must be able to name your side.',
-  },
-  {
-    id: 'T3',
-    name: 'Intro shape',
-    tone: 'amber',
-    tip: 'Read the last line first. Count the question marks.',
   },
   {
     id: 'T4',
     name: 'Banned openers',
     tone: 'rose',
+    star: { letter: 'R', word: 'Refuse', action: 'Refuse clichés' },
     tip: 'Open with the topic itself, not a wrapper about it.',
   },
 ]
 
+// Master-formula anchor card (deck position 0). Letters/actions come from
+// `families[].star`, so they can never drift out of sync with the cards.
+export const formula = {
+  id: 'STAR',
+  type: 'formula',
+  word: 'STAR',
+  title: 'The intro formula',
+  why: 'You can’t paraphrase until you know the shape — Spot always comes first.',
+}
+
 export const tactics = [
-  // ---------- T1x  Paraphrase by restructuring ----------
-  {
-    id: 'T11',
-    family: 'T1',
-    polarity: 'do',
-    title: 'Nominalize the verb',
-    hook: 'Turn the action into a thing.',
-    visual: {
-      type: 'morph',
-      from: { text: 'invest', label: 'verb · action' },
-      to: { text: 'invest[[ment]]', label: 'noun · thing' },
-    },
-    example: {
-      before: 'Governments should [[invest]] in public transport',
-      after: '[[Investment]] in public transport by governments…',
-    },
-  },
-  {
-    id: 'T12',
-    family: 'T1',
-    polarity: 'do',
-    title: 'Flip the clause order',
-    hook: 'Lead with the effect, trail the cause.',
-    visual: {
-      type: 'swap',
-      top: ['X', 'causes', 'Y'],
-      bottom: ['Y', 'results from', 'X'],
-    },
-    example: {
-      before: 'X [[causes]] Y',
-      after: 'Y [[results largely from]] X',
-    },
-  },
-  {
-    id: 'T13',
-    family: 'T1',
-    polarity: 'do',
-    title: 'Merge the two views',
-    hook: 'Two prompt sentences in, one sentence out.',
-    visual: {
-      type: 'merge',
-      inputs: ['View A', 'View B'],
-      output: 'Whether A or B…',
-    },
-    example: {
-      label: 'One sentence, both views',
-      text: '[[Whether]] school curricula should stay broad [[or]] narrow is debated.',
-    },
-  },
-
-  // ---------- T2x  Decided position ----------
-  {
-    id: 'T21',
-    family: 'T2',
-    polarity: 'do',
-    title: 'Pass the stranger test',
-    hook: 'If they have to guess your side, rewrite it.',
-    visual: {
-      type: 'test',
-      question: 'A stranger reads only your position sentence…',
-      pass: 'Names it → keep',
-      fail: 'Guesses → rewrite',
-    },
-    example: {
-      label: 'Real failure · TR capped at 6.0',
-      kind: 'fail',
-      lines: [
-        { tag: 'Asked', text: 'Is improving lives the [[most important]] aim?' },
-        { tag: 'Wrote', text: 'Science needs [[good intentions]].' },
-        { tag: 'Verdict', text: 'Adjacent ≠ answer.' },
-      ],
-    },
-  },
-  {
-    id: 'T22',
-    family: 'T2',
-    polarity: 'do',
-    title: 'Decisive, not hedged',
-    hook: 'Soften the tone, never the side.',
-    visual: {
-      type: 'dial',
-      left: 'Hedged',
-      middle: 'Decisive',
-      right: 'Extreme',
-    },
-    example: {
-      label: 'Fill-in templates',
-      lines: [
-        { text: 'While there are merits to both sides, I believe [[___]] is the more important factor.' },
-        { text: 'In my view, the disadvantages of [[___]] outweigh the benefits, primarily because [[___]].' },
-        { text: 'I largely agree that [[___]], although [[___]] deserves some consideration.' },
-      ],
-    },
-  },
-
-  // ---------- T3x  Intro shape by question type ----------
+  // ---------- S · Spot (T3x)  Intro shape by question type ----------
   {
     id: 'T31',
     family: 'T3',
@@ -219,7 +154,102 @@ export const tactics = [
     example: { label: 'Spot it by', text: 'Two question marks [[?]] [[?]] = preview two things.' },
   },
 
-  // ---------- T4x  Banned opening moves ----------
+  // ---------- T · Twist (T1x)  Paraphrase by restructuring ----------
+  {
+    id: 'T11',
+    family: 'T1',
+    polarity: 'do',
+    title: 'Nominalize the verb',
+    hook: 'Turn the action into a thing.',
+    visual: {
+      type: 'morph',
+      from: { text: 'invest', label: 'verb · action' },
+      to: { text: 'invest[[ment]]', label: 'noun · thing' },
+    },
+    example: {
+      before: 'Governments should [[invest]] in public transport',
+      after: '[[Investment]] in public transport by governments…',
+    },
+  },
+  {
+    id: 'T12',
+    family: 'T1',
+    polarity: 'do',
+    title: 'Flip the clause order',
+    hook: 'Lead with the effect, trail the cause.',
+    visual: {
+      type: 'swap',
+      top: ['X', 'causes', 'Y'],
+      bottom: ['Y', 'results from', 'X'],
+    },
+    example: {
+      before: 'X [[causes]] Y',
+      after: 'Y [[results largely from]] X',
+    },
+  },
+  {
+    id: 'T13',
+    family: 'T1',
+    polarity: 'do',
+    title: 'Merge the two views',
+    hook: 'Two prompt sentences in, one sentence out.',
+    visual: {
+      type: 'merge',
+      inputs: ['View A', 'View B'],
+      output: 'Whether A or B…',
+    },
+    example: {
+      label: 'One sentence, both views',
+      text: '[[Whether]] school curricula should stay broad [[or]] narrow is debated.',
+    },
+  },
+
+  // ---------- A · Assert (T2x)  Decided position ----------
+  {
+    id: 'T21',
+    family: 'T2',
+    polarity: 'do',
+    title: 'Pass the stranger test',
+    hook: 'If they have to guess your side, rewrite it.',
+    visual: {
+      type: 'test',
+      question: 'A stranger reads only your position sentence…',
+      pass: 'Names it → keep',
+      fail: 'Guesses → rewrite',
+    },
+    example: {
+      label: 'Real failure · TR capped at 6.0',
+      kind: 'fail',
+      lines: [
+        { tag: 'Asked', text: 'Is improving lives the [[most important]] aim?' },
+        { tag: 'Wrote', text: 'Science needs [[good intentions]].' },
+        { tag: 'Verdict', text: 'Adjacent ≠ answer.' },
+      ],
+    },
+  },
+  {
+    id: 'T22',
+    family: 'T2',
+    polarity: 'do',
+    title: 'Decisive, not hedged',
+    hook: 'Soften the tone, never the side.',
+    visual: {
+      type: 'dial',
+      left: 'Hedged',
+      middle: 'Decisive',
+      right: 'Extreme',
+    },
+    example: {
+      label: 'Fill-in templates',
+      lines: [
+        { text: 'While there are merits to both sides, I believe [[___]] is the more important factor.' },
+        { text: 'In my view, the disadvantages of [[___]] outweigh the benefits, primarily because [[___]].' },
+        { text: 'I largely agree that [[___]], although [[___]] deserves some consideration.' },
+      ],
+    },
+  },
+
+  // ---------- R · Refuse (T4x)  Banned opening moves ----------
   {
     id: 'T41',
     family: 'T4',
@@ -288,4 +318,4 @@ export const tactics = [
   },
 ]
 
-export default { families, tactics }
+export default { families, tactics, formula }

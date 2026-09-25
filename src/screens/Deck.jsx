@@ -6,10 +6,10 @@ import { navigate } from '../lib/router.js'
 import { useMastery } from '../lib/mastery.js'
 import { TopBar } from '../components/Chrome.jsx'
 import { Icon } from '../components/Icons.jsx'
-import { TacticCard, KnownToggle } from '../components/TacticCard.jsx'
+import { TacticCard, FormulaCard, KnownToggle } from '../components/TacticCard.jsx'
 
 export function Deck({ skill, section, params }) {
-  const { families, tactics } = section.deck
+  const { families, tactics, formula } = section.deck
   const { mastered, toggle } = useMastery()
   const keyOf = (t) => cardKey(skill.id, section.id, t.id)
   const back = `/${skill.id}/${section.id}`
@@ -23,11 +23,14 @@ export function Deck({ skill, section, params }) {
     }
     return tactics
   })
-  const [startIndex] = useState(() => Math.max(0, cards.findIndex((t) => t.id === params.get('start'))))
+  // Slides = optional formula anchor card (position 0, no mastery) + tactic
+  // cards. `cards` stays tactics-only so every count/denominator excludes it.
+  const slides = formula ? [formula, ...cards] : cards
+  const [startIndex] = useState(() => Math.max(0, slides.findIndex((t) => t.id === params.get('start'))))
   const [index, setIndex] = useState(startIndex)
   const indexRef = useRef(startIndex)
   const trackRef = useRef(null)
-  const slideCount = cards.length + 1 // + completion slide
+  const slideCount = slides.length + 1 // + completion slide
 
   const familyById = Object.fromEntries(families.map((f) => [f.id, f]))
 
@@ -75,8 +78,10 @@ export function Deck({ skill, section, params }) {
   }, [goTo, back])
 
   const knownInDeck = cards.filter((t) => mastered[keyOf(t)]).length
-  const current = cards[index]
-  const onDone = index >= cards.length
+  const current = slides[index]
+  const onDone = index >= slides.length
+  const onFormula = current?.type === 'formula'
+  const cardNo = onDone ? cards.length : cards.indexOf(current) + 1
 
   return (
     <div className="screen screen--deck">
@@ -85,15 +90,32 @@ export function Deck({ skill, section, params }) {
         back={back}
         right={
           <span className="counter">
-            {onDone ? cards.length : index + 1}/{cards.length}
+            {onFormula ? (
+              <Icon name="star" size={16} filled className="counter__star" />
+            ) : (
+              <>
+                {cardNo}/{cards.length}
+              </>
+            )}
           </span>
         }
       />
 
       {/* progress strip, grouped + coloured by tactic family */}
       <nav className="strip" aria-label="Cards">
+        {formula && (
+          <button
+            type="button"
+            className={`strip__formula ${index === 0 ? 'is-current' : ''}`}
+            onClick={() => goTo(0)}
+            aria-label={`${formula.word}: ${formula.title}`}
+            aria-current={index === 0 || undefined}
+          >
+            <Icon name="star" size={12} filled />
+          </button>
+        )}
         {families.map((f) => {
-          const inFam = cards.map((t, i) => [t, i]).filter(([t]) => t.family === f.id)
+          const inFam = slides.map((t, i) => [t, i]).filter(([t]) => t.family === f.id)
           if (!inFam.length) return null
           return (
             <div key={f.id} className={`strip__group tone-${f.tone}`} style={{ '--n': inFam.length }}>
@@ -113,6 +135,11 @@ export function Deck({ skill, section, params }) {
       </nav>
 
       <div className="track" ref={trackRef} onScroll={onScroll}>
+        {formula && (
+          <section className="slide" key={formula.id}>
+            <FormulaCard formula={formula} families={families} />
+          </section>
+        )}
         {cards.map((t) => {
           const fam = familyById[t.family]
           const famCards = cards.filter((c) => c.family === t.family)
@@ -155,7 +182,9 @@ export function Deck({ skill, section, params }) {
         <button type="button" className="nav-btn" onClick={() => goTo(index - 1)} disabled={index === 0} aria-label="Previous card">
           <Icon name="prev" />
         </button>
-        {current ? (
+        {onFormula ? (
+          <span className="deck-nav__hint">Swipe to start</span>
+        ) : current ? (
           <KnownToggle
             known={!!mastered[keyOf(current)]}
             onToggle={() => toggle(keyOf(current))}

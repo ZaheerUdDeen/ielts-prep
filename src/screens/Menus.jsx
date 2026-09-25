@@ -92,7 +92,8 @@ export function SectionScreen({ skill, section }) {
     )
   }
 
-  const { families, tactics } = section.deck
+  const { families, tactics, formula } = section.deck
+  const starred = families.filter((f) => f.star)
   const known = countKnown(skill.id, section, mastered)
   const learning = tactics.length - known
 
@@ -117,15 +118,48 @@ export function SectionScreen({ skill, section }) {
           </div>
         </div>
 
+        {formula && starred.length > 0 && (
+          <button
+            type="button"
+            className="star-banner"
+            onClick={() => navigate(`${base}/deck?start=${formula.id}`)}
+            aria-label={`Open the ${formula.word} formula card`}
+          >
+            <span className="star-banner__icon">
+              <Icon name="star" size={22} filled />
+            </span>
+            <span className="star-banner__body">
+              <span className="star-banner__word" aria-hidden="true">
+                {starred.map((f) => (
+                  <span key={f.id} className={`tone-${f.tone}`}>
+                    {f.star.letter}
+                  </span>
+                ))}
+              </span>
+              <span className="star-banner__chain">{starred.map((f) => f.star.word).join(' → ')}</span>
+            </span>
+            <Icon name="next" size={20} />
+          </button>
+        )}
+
         <ul className="families">
           {families.map((f) => {
             const items = tactics.filter((t) => t.family === f.id)
             return (
               <li key={f.id} className={`family tone-${f.tone}`}>
                 <div className="family__head">
-                  <span className="family__swatch" />
-                  <span className="family__name">
-                    {f.id}x · {f.name}
+                  {f.star ? (
+                    <span className="family__letter">{f.star.letter}</span>
+                  ) : (
+                    <span className="family__swatch" />
+                  )}
+                  <span className="family__titles">
+                    <span className="family__name">{f.star ? f.star.action : `${f.id}x · ${f.name}`}</span>
+                    {f.star && (
+                      <span className="family__legacy">
+                        {f.id}x · {f.name}
+                      </span>
+                    )}
                   </span>
                 </div>
                 <p className="family__tip">{f.tip}</p>

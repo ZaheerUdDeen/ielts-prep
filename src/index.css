@@ -1,6 +1,7 @@
 /* ================================================================
    IELTS Tactic Cards - mobile-first styles
    Family palette: teal (T1x) / violet (T2x) / amber (T3x) / rose (T4x)
+   STAR formula reuses it: S=amber (T3x) T=teal (T1x) A=violet (T2x) R=rose (T4x)
    ================================================================ */
 
 :root {
@@ -193,6 +194,36 @@ button:disabled { cursor: default; }
 }
 .chip--known { background: var(--c); border-color: var(--c); color: #fff; }
 
+.family__titles { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.family__legacy { font-size: 0.72rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.family__letter {
+  flex: none; width: 36px; height: 36px; border-radius: 11px;
+  display: grid; place-items: center;
+  background: var(--c); color: #fff;
+  font-size: 1.35rem; font-weight: 900; line-height: 1;
+}
+
+/* STAR banner: entry point to the formula card */
+.star-banner {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; margin-top: 14px; padding: 14px 16px;
+  border: 0; border-radius: var(--radius);
+  background: linear-gradient(145deg, #2b2e45, #1f2130); color: #fff;
+  box-shadow: var(--shadow);
+  text-align: left;
+  transition: transform 0.1s;
+}
+.star-banner:active { transform: scale(0.98); }
+.star-banner__icon {
+  flex: none; width: 44px; height: 44px; border-radius: 14px;
+  display: grid; place-items: center;
+  background: rgb(255 255 255 / 10%); color: #f5b90a;
+}
+.star-banner__body { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+.star-banner__word { font-size: 1.7rem; font-weight: 900; letter-spacing: 0.08em; line-height: 1; }
+.star-banner__word span { color: color-mix(in srgb, var(--c) 70%, white); }
+.star-banner__chain { font-size: 0.8rem; font-weight: 700; color: #b9bccb; }
+
 /* ---------------- Empty state ---------------- */
 .empty { text-align: center; padding: 48px 20px; display: grid; justify-items: center; gap: 12px; }
 .empty__art {
@@ -229,6 +260,15 @@ button:disabled { cursor: default; }
 }
 .strip__dot.is-known { background: color-mix(in srgb, var(--c) 55%, white); }
 .strip__dot.is-current { background: var(--c); transform: scaleY(1.5); }
+.strip__formula {
+  flex: none; width: 18px; height: 18px; margin-top: -5px; padding: 0;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: transparent; color: #d6d1c6;
+  transition: color 0.2s, transform 0.2s;
+}
+.strip__formula.is-current { color: #e6a100; transform: scale(1.25); }
+.counter__star { color: #e6a100; vertical-align: -2px; }
 
 .track {
   flex: 1; min-height: 0;
@@ -285,6 +325,21 @@ button:disabled { cursor: default; }
   padding: 10px 14px; border-radius: 16px;
   background: var(--c); color: #fff;
   box-shadow: 0 6px 16px color-mix(in srgb, var(--c) 35%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.card__star {
+  flex: none; min-width: 66px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 10px 7px; border-radius: 16px;
+  background: var(--c); color: #fff;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--c) 35%, transparent);
+}
+.card__star-letter { font-size: 2.3rem; font-weight: 900; line-height: 0.9; }
+.card__star-word { font-size: 0.62rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.92; }
+.card__legacy-id {
+  display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 6px;
+  font-size: 0.72rem; font-weight: 900; vertical-align: 1px;
+  background: var(--c-soft); color: var(--c-ink);
   font-variant-numeric: tabular-nums;
 }
 .card__family { flex: 1; display: flex; flex-direction: column; min-width: 0; }
@@ -382,6 +437,60 @@ mark.hl {
 .known-toggle.is-known { background: #e3f5ec; color: #0e6b41; }
 .known-toggle.is-known .known-toggle__track { background: var(--good); }
 .known-toggle.is-known .known-toggle__thumb { transform: translateX(20px); color: #e6a100; }
+
+/* ---------------- Formula (STAR) anchor card ---------------- */
+.card--formula {
+  border-top: 0;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgb(245 185 10 / 16%), transparent 60%),
+    linear-gradient(160deg, #2b2e45, #1a1c29);
+  color: #fff;
+}
+.formula { padding: 26px 20px 22px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.formula__eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #f5b90a;
+}
+.formula__word { display: flex; gap: 8px; }
+.formula__letter {
+  width: 68px; height: 80px; border-radius: 18px;
+  display: grid; place-items: center;
+  background: var(--c); color: #fff;
+  font-size: 3.4rem; font-weight: 900; line-height: 1;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--c) 45%, transparent);
+}
+.formula__letter:nth-child(odd) { transform: rotate(-3deg); }
+.formula__letter:nth-child(even) { transform: rotate(3deg) translateY(4px); }
+.formula__steps { list-style: none; padding: 0; margin: 0; width: 100%; display: grid; gap: 8px; counter-reset: none; }
+.formula__step {
+  position: relative;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 14px;
+  background: rgb(255 255 255 / 6%);
+  border-left: 4px solid var(--c);
+}
+.formula__step-letter {
+  flex: none; width: 34px; height: 34px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: var(--c); color: #fff; font-weight: 900; font-size: 1.2rem;
+}
+.formula__step-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.formula__step-text strong { font-size: 1.05rem; font-weight: 900; }
+.formula__step-text span { font-size: 0.72rem; font-weight: 700; color: #a6a9ba; text-transform: uppercase; letter-spacing: 0.06em; }
+.formula__step:not(:last-child)::after {
+  content: '↓'; position: absolute; left: 24px; bottom: -13px; z-index: 1;
+  font-size: 0.8rem; font-weight: 900; color: #6f7389;
+}
+.formula__why {
+  width: 100%; padding: 12px 14px; border-radius: 14px;
+  background: rgb(245 185 10 / 12%); border: 1px solid rgb(245 185 10 / 30%);
+  color: #fbe3a0; font-size: 0.92rem; font-weight: 700; line-height: 1.4; text-align: center;
+}
+@media (max-height: 680px) {
+  .formula { gap: 12px; padding: 18px 16px; }
+  .formula__letter { width: 56px; height: 64px; font-size: 2.7rem; }
+}
 
 /* ---------------- Done slide ---------------- */
 .card--done { border-top-color: var(--good); }
@@ -516,6 +625,7 @@ mark.hl {
   .card__visual { min-height: 120px; padding: 10px; }
   .card__title { font-size: 1.35rem; }
   .card__badge { font-size: 1.5rem; padding: 8px 12px; }
+  .card__star-letter { font-size: 1.9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
