@@ -2,17 +2,19 @@
 // Source: Obsidian note "Writing/Introduction-Guide.md".
 //
 // MASTER FORMULA: STAR — the exam-time order in which the tactics fire.
-//   S  Spot the type       -> T3x (intro shape by question type)
-//   T  Twist the sentence  -> T1x (paraphrase by restructuring)
-//   A  Assert your stance  -> T2x (decided position)
-//   R  Refuse clichés      -> T4x (banned openers)
-// Array order below IS the deck order (S -> T -> A -> R). T-IDs are legacy
-// labels and are never renumbered, so progress keys like `writing/intro:T31`
-// stay stable.
+//   S  Spot the type       -> ids S1..S5 (intro shape by question type)
+//   T  Twist the sentence  -> ids T1..T3 (paraphrase by restructuring)
+//   A  Assert your stance  -> ids A1..A2 (decided position)
+//   R  Refuse clichés      -> ids R1..R4 (banned openers)
+// Array order below IS the deck order (S -> T -> A -> R), and each tactic's
+// own id now starts with its STAR letter, so the id alone tells you both the
+// family and the step — no separate lookup needed.
 //
 // HOW TO AUTHOR A NEW SECTION (e.g. Body 1):
 //   1. Copy this file to `writing-body1-tactics.js`.
 //   2. Edit `families` and `tactics` below (and `formula`, or drop it).
+//      Pick a fresh set of family ids/letters if Body 1 needs its own STAR-like
+//      formula, or reuse S/T/A/R if the same shape applies.
 //   3. Import it in `src/data/catalog.js` and set it as that section's `deck`.
 // No component changes are needed.
 //
@@ -31,31 +33,32 @@
 // tactic. It is a reference card only: it has no Known toggle and never counts
 // toward mastery (it is not part of `tactics`).
 
-// Families are listed in STAR (exam-time) order, not by legacy number.
+// Families are listed in STAR (exam-time) order. family.id is the STAR letter
+// itself, and every tactic id in that family starts with the same letter.
 export const families = [
   {
-    id: 'T3',
+    id: 'S',
     name: 'Intro shape',
     tone: 'amber',
     star: { letter: 'S', word: 'Spot', action: 'Spot the type' },
     tip: 'Read the last line first. Count the question marks.',
   },
   {
-    id: 'T1',
+    id: 'T',
     name: 'Paraphrase',
     tone: 'teal',
     star: { letter: 'T', word: 'Twist', action: 'Twist the sentence' },
     tip: 'Change the structure first, the words second.',
   },
   {
-    id: 'T2',
+    id: 'A',
     name: 'Position',
     tone: 'violet',
     star: { letter: 'A', word: 'Assert', action: 'Assert your stance' },
     tip: 'A stranger must be able to name your side.',
   },
   {
-    id: 'T4',
+    id: 'R',
     name: 'Banned openers',
     tone: 'rose',
     star: { letter: 'R', word: 'Refuse', action: 'Refuse clichés' },
@@ -74,10 +77,10 @@ export const formula = {
 }
 
 export const tactics = [
-  // ---------- S · Spot (T3x)  Intro shape by question type ----------
+  // ---------- S · Spot  Intro shape by question type ----------
   {
-    id: 'T31',
-    family: 'T3',
+    id: 'S1',
+    family: 'S',
     polarity: 'do',
     title: 'Opinion',
     hook: 'Paraphrase + your position.',
@@ -91,8 +94,8 @@ export const tactics = [
     example: { label: 'Spot it by', text: '"To what extent do you [[agree]]?"' },
   },
   {
-    id: 'T32',
-    family: 'T3',
+    id: 'S2',
+    family: 'S',
     polarity: 'do',
     title: 'Discussion',
     hook: 'Paraphrase BOTH views + your position.',
@@ -107,8 +110,8 @@ export const tactics = [
     example: { label: 'Spot it by', text: '"Discuss [[both views]] and give your own opinion."' },
   },
   {
-    id: 'T33',
-    family: 'T3',
+    id: 'S3',
+    family: 'S',
     polarity: 'do',
     title: 'Advantages / Disadvantages',
     hook: 'Paraphrase + say which side outweighs.',
@@ -122,8 +125,8 @@ export const tactics = [
     example: { label: 'Spot it by', text: '"Do the advantages [[outweigh]] the disadvantages?"' },
   },
   {
-    id: 'T34',
-    family: 'T3',
+    id: 'S4',
+    family: 'S',
     polarity: 'do',
     title: 'Problem / Solution',
     hook: 'Paraphrase + signal problems AND solutions are coming.',
@@ -138,8 +141,8 @@ export const tactics = [
     example: { label: 'Spot it by', text: '"What are the [[problems]]… what [[solutions]]…?"' },
   },
   {
-    id: 'T35',
-    family: 'T3',
+    id: 'S5',
+    family: 'S',
     polarity: 'do',
     title: 'Two-part question',
     hook: 'Paraphrase both questions. Don’t answer yet.',
@@ -154,10 +157,10 @@ export const tactics = [
     example: { label: 'Spot it by', text: 'Two question marks [[?]] [[?]] = preview two things.' },
   },
 
-  // ---------- T · Twist (T1x)  Paraphrase by restructuring ----------
+  // ---------- T · Twist  Paraphrase by restructuring ----------
   {
-    id: 'T11',
-    family: 'T1',
+    id: 'T1',
+    family: 'T',
     polarity: 'do',
     title: 'Nominalize the verb',
     hook: 'Turn the action into a thing.',
@@ -172,8 +175,8 @@ export const tactics = [
     },
   },
   {
-    id: 'T12',
-    family: 'T1',
+    id: 'T2',
+    family: 'T',
     polarity: 'do',
     title: 'Flip the clause order',
     hook: 'Lead with the effect, trail the cause.',
@@ -188,8 +191,8 @@ export const tactics = [
     },
   },
   {
-    id: 'T13',
-    family: 'T1',
+    id: 'T3',
+    family: 'T',
     polarity: 'do',
     title: 'Merge the two views',
     hook: 'Two prompt sentences in, one sentence out.',
@@ -204,10 +207,10 @@ export const tactics = [
     },
   },
 
-  // ---------- A · Assert (T2x)  Decided position ----------
+  // ---------- A · Assert  Decided position ----------
   {
-    id: 'T21',
-    family: 'T2',
+    id: 'A1',
+    family: 'A',
     polarity: 'do',
     title: 'Pass the stranger test',
     hook: 'If they have to guess your side, rewrite it.',
@@ -228,8 +231,8 @@ export const tactics = [
     },
   },
   {
-    id: 'T22',
-    family: 'T2',
+    id: 'A2',
+    family: 'A',
     polarity: 'do',
     title: 'Decisive, not hedged',
     hook: 'Soften the tone, never the side.',
@@ -249,10 +252,10 @@ export const tactics = [
     },
   },
 
-  // ---------- R · Refuse (T4x)  Banned opening moves ----------
+  // ---------- R · Refuse  Banned opening moves ----------
   {
-    id: 'T41',
-    family: 'T4',
+    id: 'R1',
+    family: 'R',
     polarity: 'dont',
     title: 'Never open with “Nowadays…”',
     hook: 'A memorized wrapper — costs naturalness marks.',
@@ -267,8 +270,8 @@ export const tactics = [
     },
   },
   {
-    id: 'T42',
-    family: 'T4',
+    id: 'R2',
+    family: 'R',
     polarity: 'dont',
     title: 'No “many controversial opinions”',
     hook: 'Talks about opinions. Says nothing.',
@@ -283,8 +286,8 @@ export const tactics = [
     },
   },
   {
-    id: 'T43',
-    family: 'T4',
+    id: 'R3',
+    family: 'R',
     polarity: 'dont',
     title: 'Don’t copy 3+ prompt words',
     hook: 'Three prompt words in a row = copying.',
@@ -300,8 +303,8 @@ export const tactics = [
     },
   },
   {
-    id: 'T44',
-    family: 'T4',
+    id: 'R4',
+    family: 'R',
     polarity: 'dont',
     title: 'No rhetorical-question opener',
     hook: 'Asking isn’t answering. State, don’t ask.',

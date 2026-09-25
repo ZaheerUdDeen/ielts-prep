@@ -111,9 +111,7 @@ export function FormulaCard({ formula, families }) {
               <span className="formula__step-letter">{f.star.letter}</span>
               <span className="formula__step-text">
                 <strong>{f.star.action}</strong>
-                <span>
-                  {f.id}x · {f.name}
-                </span>
+                <span>{f.name}</span>
               </span>
             </li>
           ))}

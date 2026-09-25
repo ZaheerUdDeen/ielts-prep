@@ -30,7 +30,7 @@ export function findSection(skillId, sectionId) {
   return findSkill(skillId)?.sections.find((s) => s.id === sectionId)
 }
 
-/** Namespaced key so T11 in Intro never collides with a future T11 in Body 1. */
+/** Namespaced key so S1 in Intro never collides with a future S1 in Body 1. */
 export function cardKey(skillId, sectionId, tacticId) {
   return `${skillId}/${sectionId}:${tacticId}`
 }

@@ -154,12 +154,8 @@ export function SectionScreen({ skill, section }) {
                     <span className="family__swatch" />
                   )}
                   <span className="family__titles">
-                    <span className="family__name">{f.star ? f.star.action : `${f.id}x · ${f.name}`}</span>
-                    {f.star && (
-                      <span className="family__legacy">
-                        {f.id}x · {f.name}
-                      </span>
-                    )}
+                    <span className="family__name">{f.star ? f.star.action : f.name}</span>
+                    {f.star && <span className="family__legacy">{f.name}</span>}
                   </span>
                 </div>
                 <p className="family__tip">{f.tip}</p>

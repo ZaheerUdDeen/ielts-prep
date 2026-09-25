@@ -8,7 +8,7 @@ import { Deck } from './screens/Deck.jsx'
 //   #/                          Home
 //   #/writing                   Skill -> sections
 //   #/writing/intro             Section overview
-//   #/writing/intro/deck        Card deck   (?start=T12  ?mode=learning)
+//   #/writing/intro/deck        Card deck   (?start=T2  ?mode=learning)
 export default function App() {
   const { parts, params } = useRoute()
   const [skillId, sectionId, view] = parts
