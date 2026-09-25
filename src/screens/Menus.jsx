@@ -1,9 +1,10 @@
-// Home (skills), Skill (sections) and Section overview screens.
+// Home (skills), Skill (sections, as a flow map) and Section overview screens.
 import { skills, cardKey } from '../data/catalog.js'
 import { navigate } from '../lib/router.js'
 import { useMastery } from '../lib/mastery.js'
 import { TopBar, Tile, ProgressRing } from '../components/Chrome.jsx'
 import { Icon } from '../components/Icons.jsx'
+import { FlowMap } from '../components/FlowMap.jsx'
 
 function countKnown(skillId, section, mastered) {
   if (!section.deck) return 0
@@ -36,35 +37,13 @@ export function Home() {
 
 export function SkillScreen({ skill }) {
   const { mastered } = useMastery()
+  // The flow map IS the section navigation: its big formula stations
+  // (STAR / CASE / PAIR / SEAL, read from each deck) replace the old tiles.
   return (
     <div className="screen">
       <TopBar title={skill.label} back="/" />
-      <main className="grid grid--2">
-        {skill.sections.map((sec) => {
-          const total = sec.deck?.tactics.length || 0
-          const known = countKnown(skill.id, sec, mastered)
-          return (
-            <Tile
-              key={sec.id}
-              label={sec.label}
-              subtitle={sec.subtitle}
-              accent={total ? 'live' : 'empty'}
-              meta={
-                total ? (
-                  <>
-                    <span className="meter">
-                      <span className="meter__fill" style={{ width: `${(known / total) * 100}%` }} />
-                    </span>
-                    {total} cards · {known} known
-                  </>
-                ) : (
-                  'Coming soon'
-                )
-              }
-              onClick={() => navigate(`/${skill.id}/${sec.id}`)}
-            />
-          )
-        })}
+      <main>
+        <FlowMap skill={skill} mastered={mastered} />
       </main>
     </div>
   )
