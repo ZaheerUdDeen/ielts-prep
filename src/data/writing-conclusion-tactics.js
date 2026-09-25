@@ -141,10 +141,12 @@ export const tactics = [
       head: ['Essay type · What to echo'],
       rows: [
         {
+          type: 'adv-dis',
           label: 'Advantages / Disadvantages',
           text: 'The [[which-outweighs]] verdict must appear in the intro AND the conclusion — stating it once isn’t enough.',
         },
         {
+          type: 'two-part',
           label: 'Two-part question',
           text: '[[Both answers]], one line each — not one full answer and one afterthought.',
         },
@@ -163,17 +165,18 @@ export const tactics = [
       type: 'grid',
       head: ['Essay type · Conclusion’s job'],
       rows: [
-        { label: 'Opinion', text: 'Restate position, developed with the strongest reason' },
-        { label: 'Discussion', text: 'State your opinion clearly — not a neutral recap of both views' },
-        { label: 'Advantages / Disadvantages', text: 'Restate the verdict — which side outweighs' },
-        { label: 'Problem / Solution', text: 'Restate' },
-        { label: 'Two-part question', text: 'Both answers, one line each' },
+        { type: 'opinion', label: 'Opinion', text: 'Restate position, developed with the strongest reason' },
+        { type: 'discussion', label: 'Discussion', text: 'State your opinion clearly — not a neutral recap of both views' },
+        { type: 'adv-dis', label: 'Advantages / Disadvantages', text: 'Restate the verdict — which side outweighs' },
+        { type: 'problem-solution', label: 'Problem / Solution', text: 'Restate' },
+        { type: 'two-part', label: 'Two-part question', text: 'Both answers, one line each' },
       ],
     },
   },
   {
     id: 'A2',
     family: 'A',
+    appliesToType: 'two-part',
     polarity: 'do',
     title: 'The Two-Part trap: equal space, even in one line each',
     hook: 'Both lines need to be complete — not one full sentence and one fragment.',

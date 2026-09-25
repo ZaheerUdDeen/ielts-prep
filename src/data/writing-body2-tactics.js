@@ -109,11 +109,11 @@ export const tactics = [
       type: 'grid',
       head: ['Essay type · Body 2’s job'],
       rows: [
-        { label: 'Opinion', text: 'My second reason (or a concession, then rebuttal)' },
-        { label: 'Discussion', text: 'View 2, presented fairly — same treatment as View 1' },
-        { label: 'Advantages / Disadvantages', text: '2 disadvantages, developed' },
-        { label: 'Problem / Solution', text: 'Solutions that map onto the specific problems named in Body 1' },
-        { label: 'Two-part question', text: 'Answer to Question 2 only' },
+        { type: 'opinion', label: 'Opinion', text: 'My second reason (or a concession, then rebuttal)' },
+        { type: 'discussion', label: 'Discussion', text: 'View 2, presented fairly — same treatment as View 1' },
+        { type: 'adv-dis', label: 'Advantages / Disadvantages', text: '2 disadvantages, developed' },
+        { type: 'problem-solution', label: 'Problem / Solution', text: 'Solutions that map onto the specific problems named in Body 1' },
+        { type: 'two-part', label: 'Two-part question', text: 'Answer to Question 2 only' },
       ],
     },
   },
@@ -122,6 +122,7 @@ export const tactics = [
   {
     id: 'A1',
     family: 'A',
+    appliesToType: 'opinion',
     polarity: 'do',
     title: 'Opinion type: concession-then-rebuttal beats a flat second reason',
     hook: 'Name the counterargument, then beat it — stronger than just adding a reason.',
@@ -146,6 +147,7 @@ export const tactics = [
   {
     id: 'A2',
     family: 'A',
+    appliesToType: 'problem-solution',
     polarity: 'do',
     title: 'Problem/Solution type: every solution maps to a named problem',
     hook: 'Solutions answer the problems you named — not a new topic.',
@@ -247,6 +249,7 @@ export const tactics = [
   {
     id: 'R2',
     family: 'R',
+    appliesToType: 'adv-dis',
     polarity: 'do',
     title: 'Advantages/Disadvantages: land the verdict, don’t just list',
     hook: 'The question asks which outweighs — say it again here.',

@@ -1,10 +1,10 @@
-// Home (skills), Skill (sections, as a flow map) and Section overview screens.
+// Home (skills), Skill (formula sentence + type-driven walkthrough) and Section overview screens.
 import { skills, cardKey } from '../data/catalog.js'
 import { navigate } from '../lib/router.js'
 import { useMastery } from '../lib/mastery.js'
 import { TopBar, Tile, ProgressRing } from '../components/Chrome.jsx'
 import { Icon } from '../components/Icons.jsx'
-import { FlowMap } from '../components/FlowMap.jsx'
+import { Walkthrough } from '../components/Walkthrough.jsx'
 
 function countKnown(skillId, section, mastered) {
   if (!section.deck) return 0
@@ -35,15 +35,42 @@ export function Home() {
   )
 }
 
+// Fixed prose around the four section formula words (read from each deck).
+const FORMULA_PROSE = ['Reach for a ', ', build your ', ', find its ', ', and ', ' the deal.']
+
+function FormulaSentence({ skill }) {
+  return (
+    <p className="formula-line">
+      {FORMULA_PROSE.map((text, i) => {
+        const section = skill.sections[i]
+        const word = section && (section.deck?.formula?.word || section.label)
+        return (
+          <span key={i}>
+            {text}
+            {word && (
+              <a className="formula-line__word" href={`#/${skill.id}/${section.id}`} aria-label={`${word}: ${section.label}`}>
+                {[...word].map((ch, k) => (
+                  <span key={k} className={`tone-${section.deck?.families[k]?.tone || 'none'}`}>
+                    {ch}
+                  </span>
+                ))}
+              </a>
+            )}
+          </span>
+        )
+      })}
+    </p>
+  )
+}
+
 export function SkillScreen({ skill }) {
   const { mastered } = useMastery()
-  // The flow map IS the section navigation: its big formula stations
-  // (STAR / CASE / PAIR / SEAL, read from each deck) replace the old tiles.
   return (
     <div className="screen">
       <TopBar title={skill.label} back="/" />
-      <main>
-        <FlowMap skill={skill} mastered={mastered} />
+      <main className="skill">
+        <FormulaSentence skill={skill} />
+        <Walkthrough skill={skill} mastered={mastered} />
       </main>
     </div>
   )

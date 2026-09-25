@@ -222,6 +222,7 @@ export const tactics = [
   {
     id: 'E1',
     family: 'E',
+    appliesToType: 'opinion',
     polarity: 'do',
     title: 'The concession sentence (worth half a band)',
     hook: 'Name the rival, then subordinate it — one sentence.',
@@ -249,16 +250,17 @@ export const tactics = [
       type: 'grid',
       head: ['Essay type · Body 1’s job', 'Concede?'],
       rows: [
-        { label: 'Opinion', text: 'State my first reason', mark: 'yes' },
+        { type: 'opinion', label: 'Opinion', text: 'State my first reason', mark: 'yes' },
         {
+          type: 'discussion',
           label: 'Discussion',
           text: 'Present View 1 at its strongest, fairly — this IS the rival view',
           mark: 'no',
           note: 'Attacking / hedging caps TR at 6.0',
         },
-        { label: 'Advantages / Disadvantages', text: 'One developed advantage (or disadvantage)', mark: 'opt' },
-        { label: 'Problem / Solution', text: 'One developed problem', mark: 'no' },
-        { label: 'Two-part question', text: 'Answer to Question 1 only', mark: 'no' },
+        { type: 'adv-dis', label: 'Advantages / Disadvantages', text: 'One developed advantage (or disadvantage)', mark: 'opt' },
+        { type: 'problem-solution', label: 'Problem / Solution', text: 'One developed problem', mark: 'no' },
+        { type: 'two-part', label: 'Two-part question', text: 'Answer to Question 1 only', mark: 'no' },
       ],
       footer:
         'Discussion fairness test: could someone who actually holds this view read your paragraph and agree you were fair? If no, rewrite it.',

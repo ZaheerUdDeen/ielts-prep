@@ -82,6 +82,7 @@ export const tactics = [
   {
     id: 'S1',
     family: 'S',
+    type: 'opinion',
     polarity: 'do',
     title: 'Opinion',
     hook: 'Paraphrase + your position.',
@@ -97,6 +98,7 @@ export const tactics = [
   {
     id: 'S2',
     family: 'S',
+    type: 'discussion',
     polarity: 'do',
     title: 'Discussion',
     hook: 'Paraphrase BOTH views + your position.',
@@ -113,6 +115,7 @@ export const tactics = [
   {
     id: 'S3',
     family: 'S',
+    type: 'adv-dis',
     polarity: 'do',
     title: 'Advantages / Disadvantages',
     hook: 'Paraphrase + say which side outweighs.',
@@ -128,6 +131,7 @@ export const tactics = [
   {
     id: 'S4',
     family: 'S',
+    type: 'problem-solution',
     polarity: 'do',
     title: 'Problem / Solution',
     hook: 'Paraphrase + signal problems AND solutions are coming.',
@@ -144,6 +148,7 @@ export const tactics = [
   {
     id: 'S5',
     family: 'S',
+    type: 'two-part',
     polarity: 'do',
     title: 'Two-part question',
     hook: 'Paraphrase both questions. Don’t answer yet.',
