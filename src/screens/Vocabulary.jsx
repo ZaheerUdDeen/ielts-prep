@@ -2,7 +2,7 @@
 // Loop: show a word for 5 s -> hide it -> type it from memory -> check, see the
 // letter diff and the meaning -> next. Words you miss come back sooner.
 import { useEffect, useMemo, useRef, useState } from 'react'
-import vocabulary from '../data/vocabulary.js'
+import vocabulary, { SETS } from '../data/vocabulary-sets.js'
 import { TopBar } from '../components/Chrome.jsx'
 import { Icon } from '../components/Icons.jsx'
 import {
@@ -17,26 +17,39 @@ import {
 const REVEAL_MS = 5000
 const RECENT = 6
 const TONES = ['amber', 'teal', 'violet', 'rose']
-const POS_LABEL = { n: 'noun', v: 'verb', adj: 'adjective', adv: 'adverb', prep: 'preposition', conj: 'conjunction' }
-const LEVELS = ['all', 'miss', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+const POS_LABEL = {
+  n: 'noun',
+  v: 'verb',
+  adj: 'adjective',
+  adv: 'adverb',
+  prep: 'preposition',
+  conj: 'conjunction',
+  phr: 'phrase',
+}
+const DEFAULT_SET = 'awl'
 
 const toneFor = (sublist) => TONES[(sublist - 1) % TONES.length]
+
+function poolOf(set) {
+  return vocabulary.filter((e) => e.src === set)
+}
 
 function clean(s) {
   return s.trim().toLowerCase().replace(/[‐-―]/g, '-').replace(/\s+/g, ' ')
 }
 
-function poolFor(level, words) {
-  if (level === 'miss') return vocabulary.filter((e) => words[e.w]?.miss)
-  if (level !== 'all') return vocabulary.filter((e) => String(e.s) === level)
-  return vocabulary
+function poolFor(set, level, words) {
+  const base = poolOf(set)
+  if (level === 'miss') return base.filter((e) => words[e.w]?.miss)
+  if (level !== 'all') return base.filter((e) => String(e.s) === level)
+  return base
 }
 
 // Weighted pick: last attempt wrong = very likely, new = normal,
 // each correct-in-a-row halves the chance. Recently shown words are skipped.
-function pickWord(level, words, recent) {
-  let pool = poolFor(level, words)
-  if (!pool.length) pool = vocabulary
+function pickWord(set, level, words, recent) {
+  let pool = poolFor(set, level, words)
+  if (!pool.length) pool = poolOf(set)
   const fresh = pool.length > RECENT ? pool.filter((e) => !recent.includes(e.w)) : pool
   const weight = (e) => {
     const h = words[e.w]
@@ -139,11 +152,33 @@ function Stats({ progress }) {
   )
 }
 
-function Levels({ level, missCount, onChange }) {
+function SetSwitch({ set, onChange }) {
+  return (
+    <div className="vx-levels" role="radiogroup" aria-label="Vocabulary source">
+      {Object.values(SETS).map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          role="radio"
+          aria-checked={set === s.id}
+          className={`vx-level ${set === s.id ? 'is-on' : ''}`}
+          onClick={() => onChange(s.id)}
+          title={s.fullLabel}
+        >
+          {s.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function Levels({ set, level, missCount, onChange }) {
+  const meta = SETS[set]
+  const levels = ['all', 'miss', ...meta.groups]
   return (
     <div className="vx-levels" role="radiogroup" aria-label="Word set">
-      {LEVELS.map((l) => {
-        const label = l === 'all' ? `All ${vocabulary.length}` : l === 'miss' ? `Mistakes ${missCount}` : `Sublist ${l}`
+      {levels.map((l) => {
+        const label = l === 'all' ? `All ${poolOf(set).length}` : l === 'miss' ? `Mistakes ${missCount}` : meta.groupLabel(l)
         const disabled = l === 'miss' && !missCount
         return (
           <button
@@ -168,7 +203,7 @@ function Meaning({ entry }) {
     <div className={`vx-meaning tone-${toneFor(entry.s)}`}>
       <div className="vx-meaning__tags">
         <span className="vx-tag vx-tag--pos">{POS_LABEL[entry.p]}</span>
-        <span className="vx-tag vx-tag--sub">AWL sublist {entry.s}</span>
+        <span className="vx-tag vx-tag--sub">{SETS[entry.src].tagLabel(entry.s)}</span>
       </div>
       <p className="vx-meaning__def">{entry.d}</p>
       {entry.f && (
@@ -255,7 +290,8 @@ function Backup({ onMessage }) {
 
 export function VocabularyScreen() {
   const progress = useVocabProgress()
-  const [round, setRound] = useState(() => ({ n: 0, entry: pickWord(progress.level, progress.words, []) }))
+  const [set, setSet] = useState(DEFAULT_SET)
+  const [round, setRound] = useState(() => ({ n: 0, entry: pickWord(DEFAULT_SET, progress.level, progress.words, []) }))
   const [phase, setPhase] = useState('show') // show | type | result
   const [secs, setSecs] = useState(REVEAL_MS / 1000)
   const [typed, setTyped] = useState('')
@@ -268,10 +304,10 @@ export function VocabularyScreen() {
 
   const missed = useMemo(
     () =>
-      vocabulary
+      poolOf(set)
         .filter((e) => progress.words[e.w]?.miss)
         .sort((a, b) => progress.words[b.w].x - progress.words[a.w].x),
-    [progress.words],
+    [progress.words, set],
   )
 
   // 5-second reveal
@@ -294,9 +330,9 @@ export function VocabularyScreen() {
   }, [phase])
 
   // Start a new round with `forced` or a weighted pick from `level`.
-  const startRound = (forced, level = progress.level) => {
+  const startRound = (forced, level = progress.level, forSet = set) => {
     recent.current = [...recent.current.filter((w) => w !== entry.w), entry.w].slice(-RECENT)
-    const next = forced || pickWord(level, progress.words, recent.current)
+    const next = forced || pickWord(forSet, level, progress.words, recent.current)
     setRound((r) => ({ n: r.n + 1, entry: next }))
     setTyped('')
     setResult(null)
@@ -324,6 +360,13 @@ export function VocabularyScreen() {
     startRound(null, l)
   }
 
+  const changeSet = (s) => {
+    if (s === set) return
+    setSet(s)
+    setLevel('all')
+    startRound(null, 'all', s)
+  }
+
   const onReset = () => {
     if (window.confirm('Reset all vocabulary progress? This clears your stats and word history on this device.')) {
       resetProgress()
@@ -339,7 +382,8 @@ export function VocabularyScreen() {
       <TopBar title="Vocabulary" back="/" />
       <main className="vx__main">
         <Stats progress={progress} />
-        <Levels level={progress.level} missCount={missed.length} onChange={changeLevel} />
+        <SetSwitch set={set} onChange={changeSet} />
+        <Levels set={set} level={progress.level} missCount={missed.length} onChange={changeLevel} />
 
         <section
           className={`vx-stage vx-stage--${phase} ${result ? (result.ok ? 'is-right' : 'is-wrong') : ''}`}
@@ -487,7 +531,8 @@ export function VocabularyScreen() {
         </section>
 
         <p className="vx-credit">
-          Words: Academic Word List (Coxhead, 2000), via lpmi-13/machine_readable_wordlists (CC0).
+          AWL: Academic Word List (Coxhead, 2000), via lpmi-13/machine_readable_wordlists (CC0). IELTS Topics:
+          curated Task 2 essay-topic collocations.
         </p>
       </main>
     </div>

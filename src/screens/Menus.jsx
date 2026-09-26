@@ -3,7 +3,7 @@ import { skills, cardKey } from '../data/catalog.js'
 import { navigate } from '../lib/router.js'
 import { useMastery } from '../lib/mastery.js'
 import { useVocabProgress } from '../lib/vocabProgress.js'
-import vocabulary from '../data/vocabulary.js'
+import vocabulary from '../data/vocabulary-sets.js'
 import { TopBar, Tile, ProgressRing } from '../components/Chrome.jsx'
 import { Icon } from '../components/Icons.jsx'
 import { Walkthrough } from '../components/Walkthrough.jsx'
@@ -43,7 +43,7 @@ function VocabTile() {
   const { attempted, correct } = useVocabProgress()
   const meta = attempted
     ? `${attempted} attempted · ${Math.round((correct / attempted) * 100)}% correct`
-    : `${vocabulary.length} academic words`
+    : `${vocabulary.length} words`
   return (
     <Tile
       label="Vocabulary"
