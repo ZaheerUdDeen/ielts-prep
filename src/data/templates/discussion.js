@@ -40,7 +40,7 @@ export default {
     {
       id: 'intro',
       section: 'intro',
-      total: range(40, 50),
+      total: range(52, 60),
       parts: [
         'Whether ',
         {
@@ -83,7 +83,7 @@ export default {
           title: 'Concession-direction rule',
           text: 'Condition concedes merit to the view OPPOSITE to your Position — it doesn’t double down on the same side.',
         },
-        { id: 'total', title: 'Total target', text: '~40–50 words.' },
+        { id: 'total', title: 'Total target', text: '~52–60 words (18 fixed template words + the 4 blanks above).' },
       ],
     },
     {
