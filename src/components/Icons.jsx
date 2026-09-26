@@ -53,6 +53,20 @@ const paths = {
       <path d="M7 3h12a2 2 0 0 1 2 2v12" />
     </>
   ),
+  spell: (
+    <>
+      <path d="M2.5 15 6.5 4l4 11M4 11h5" />
+      <path d="m13.5 16.5 3 3 5-6.5" />
+    </>
+  ),
+  eye: (
+    <>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  download: <path d="M12 3v12M7 10l5 5 5-5M4 21h16" />,
+  upload: <path d="M12 16V4M7 9l5-5 5 5M4 21h16" />,
   sprout: (
     <>
       <path d="M12 22V11" />

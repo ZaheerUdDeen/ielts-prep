@@ -2,6 +2,8 @@
 import { skills, cardKey } from '../data/catalog.js'
 import { navigate } from '../lib/router.js'
 import { useMastery } from '../lib/mastery.js'
+import { useVocabProgress } from '../lib/vocabProgress.js'
+import vocabulary from '../data/vocabulary.js'
 import { TopBar, Tile, ProgressRing } from '../components/Chrome.jsx'
 import { Icon } from '../components/Icons.jsx'
 import { Walkthrough } from '../components/Walkthrough.jsx'
@@ -30,8 +32,27 @@ export function Home() {
             onClick={() => navigate(`/${s.id}`)}
           />
         ))}
+        <VocabTile />
       </main>
     </div>
+  )
+}
+
+// Standalone tool, not a skill: full-width tile under the four skills.
+function VocabTile() {
+  const { attempted, correct } = useVocabProgress()
+  const meta = attempted
+    ? `${attempted} attempted · ${Math.round((correct / attempted) * 100)}% correct`
+    : `${vocabulary.length} academic words`
+  return (
+    <Tile
+      label="Vocabulary"
+      subtitle="See it · Hide it · Spell it"
+      icon="spell"
+      accent="vocab"
+      meta={meta}
+      onClick={() => navigate('/vocabulary')}
+    />
   )
 }
 
