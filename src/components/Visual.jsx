@@ -92,17 +92,44 @@ function Test({ question, pass, fail }) {
   )
 }
 
-function Dial({ left, middle, right }) {
+// Dial end labels sit under narrow arc ends: a trailing "(…)" qualifier wraps
+// onto its own line so long labels like "Mechanical (every sentence)" fit.
+function splitQualifier(label) {
+  const m = /^(.*?)\s+(\(.*\))$/.exec(label)
+  return m ? [m[1], m[2]] : [label]
+}
+
+function DialLabel({ x, label }) {
+  const [main, qualifier] = splitQualifier(label)
   return (
-    <svg className="v-svg" viewBox="0 0 300 180" role="img" aria-label={`Aim for ${middle}, between ${left} and ${right}`}>
+    <text x={x} y="178" className="v-svg__small">
+      {main}
+      {qualifier && (
+        <tspan x={x} dy="15">
+          {qualifier}
+        </tspan>
+      )}
+    </text>
+  )
+}
+
+function Dial({ left, middle, right }) {
+  const wraps = [left, right].some((l) => splitQualifier(l).length > 1)
+  return (
+    <svg
+      className="v-svg"
+      viewBox={`0 0 300 ${wraps ? 196 : 180}`}
+      role="img"
+      aria-label={`Aim for ${middle}, between ${left} and ${right}`}
+    >
       <path d="M40 160 A110 110 0 0 1 93 65.7" className="stroke-muted" strokeWidth="22" fill="none" />
       <path d="M97 63.4 A110 110 0 0 1 203 63.4" className="stroke-c" strokeWidth="22" fill="none" />
       <path d="M207 65.7 A110 110 0 0 1 260 160" className="stroke-warn" strokeWidth="22" fill="none" />
       <line x1="150" y1="160" x2="150" y2="68" className="stroke-ink" strokeWidth="5" strokeLinecap="round" />
       <circle cx="150" cy="160" r="10" className="fill-ink" />
       <text x="150" y="26" className="v-svg__mid v-svg__c">{middle} ✓</text>
-      <text x="40" y="178" className="v-svg__small">{left}</text>
-      <text x="260" y="178" className="v-svg__small">{right}</text>
+      <DialLabel x={40} label={left} />
+      <DialLabel x={260} label={right} />
     </svg>
   )
 }

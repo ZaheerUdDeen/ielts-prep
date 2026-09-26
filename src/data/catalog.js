@@ -6,6 +6,8 @@ import writingIntro from './writing-intro-tactics.js'
 import writingBody1 from './writing-body1-tactics.js'
 import writingBody2 from './writing-body2-tactics.js'
 import writingConclusion from './writing-conclusion-tactics.js'
+import writingFlow from './writing-flow-tactics.js'
+import writingRich from './writing-rich-tactics.js'
 
 export const skills = [
   {
@@ -18,6 +20,11 @@ export const skills = [
       { id: 'body1', label: 'Body 1', subtitle: 'CASE formula', deck: writingBody1 },
       { id: 'body2', label: 'Body 2', subtitle: 'PAIR formula', deck: writingBody2 },
       { id: 'conclusion', label: 'Conclusion', subtitle: 'SEAL formula', deck: writingConclusion },
+      // Cross-cutting layers: no paragraph of their own, same for every essay
+      // type. `layer: true` keeps them out of the per-type Walkthrough while
+      // leaving them browsable like any other section.
+      { id: 'flow', label: 'Flow', subtitle: 'FLOW formula', deck: writingFlow, layer: true },
+      { id: 'lexical', label: 'Lexical', subtitle: 'RICH formula', deck: writingRich, layer: true },
     ],
   },
   { id: 'listening', label: 'Listening', icon: 'headphones', enabled: false, sections: [] },
