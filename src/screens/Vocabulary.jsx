@@ -1,5 +1,5 @@
 // Vocabulary: spelling + meaning trainer over the Academic Word List.
-// Loop: show a word for 5 s -> hide it -> type it from memory -> check, see the
+// Loop: show a word for 3 s -> hide it -> type it from memory -> check, see the
 // letter diff and the meaning -> next. Words you miss come back sooner.
 import { useEffect, useMemo, useRef, useState } from 'react'
 import vocabulary, { SETS } from '../data/vocabulary-sets.js'
@@ -14,7 +14,7 @@ import {
   importProgress,
 } from '../lib/vocabProgress.js'
 
-const REVEAL_MS = 5000
+const REVEAL_MS = 3000
 const RECENT = 6
 const TONES = ['amber', 'teal', 'violet', 'rose']
 const POS_LABEL = {
@@ -310,7 +310,7 @@ export function VocabularyScreen() {
     [progress.words, set],
   )
 
-  // 5-second reveal
+  // 3-second reveal
   useEffect(() => {
     if (phase !== 'show') return undefined
     const started = Date.now()
