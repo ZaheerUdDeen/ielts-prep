@@ -8,6 +8,10 @@ import vocabulary from '../data/vocabulary-sets.js'
 import { TopBar, Tile, ProgressRing } from '../components/Chrome.jsx'
 import { Icon } from '../components/Icons.jsx'
 import { Walkthrough } from '../components/Walkthrough.jsx'
+import { TemplateEntry } from './TemplatePractice.jsx'
+import { templates } from '../data/templates/index.js'
+import { useTemplateDrafts } from '../lib/templateDrafts.js'
+import { essayWords } from '../lib/templateStats.js'
 
 function countKnown(skillId, section, mastered) {
   if (!section.deck) return 0
@@ -105,9 +109,34 @@ export function SkillScreen({ skill }) {
       <TopBar title={skill.label} back="/" />
       <main className="skill">
         <FormulaSentence skill={skill} />
+        <TemplateCta skill={skill} />
         <Walkthrough skill={paragraphs} mastered={mastered} />
       </main>
     </div>
+  )
+}
+
+// Entry point to the fill-in-the-blank template tool. With one template it
+// opens it directly; with several it opens the template list.
+function TemplateCta({ skill }) {
+  const { drafts } = useTemplateDrafts()
+  if (skill.id !== 'writing' || !templates.length) return null
+  if (templates.length === 1) {
+    const t = templates[0]
+    return <TemplateEntry skill={skill} template={t} words={essayWords(t, drafts)} title="Practice with a template" />
+  }
+  return (
+    <button type="button" className="tp-entry" onClick={() => navigate(`/${skill.id}/templates`)}>
+      <span className="tp-entry__icon">
+        <Icon name="pen" size={22} />
+      </span>
+      <span className="tp-entry__body">
+        <span className="tp-entry__eyebrow">Practice with a template</span>
+        <strong>{templates.map((t) => t.label).join(' · ')}</strong>
+        <span className="tp-entry__meta">Fill-in-the-blank, one per essay type</span>
+      </span>
+      <Icon name="next" size={20} />
+    </button>
   )
 }
 

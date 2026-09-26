@@ -67,6 +67,12 @@ const paths = {
   ),
   download: <path d="M12 3v12M7 10l5 5 5-5M4 21h16" />,
   upload: <path d="M12 16V4M7 9l5-5 5 5M4 21h16" />,
+  alert: (
+    <>
+      <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+      <path d="M12 9v4M12 17h.01" />
+    </>
+  ),
   sprout: (
     <>
       <path d="M12 22V11" />

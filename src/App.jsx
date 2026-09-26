@@ -4,11 +4,14 @@ import { findSkill, findSection } from './data/catalog.js'
 import { Home, SkillScreen, SectionScreen } from './screens/Menus.jsx'
 import { Deck } from './screens/Deck.jsx'
 import { VocabularyScreen } from './screens/Vocabulary.jsx'
+import { TemplateScreen, TemplatesIndex } from './screens/TemplatePractice.jsx'
 
 // Routes (hash-based):
 //   #/                          Home
 //   #/vocabulary                Vocabulary spelling + meaning trainer (standalone tool)
 //   #/writing                   Skill -> sections
+//   #/writing/templates         Fill-in-the-blank template list
+//   #/writing/templates/discussion  Template practice for one essay type
 //   #/writing/intro             Section overview
 //   #/writing/intro/deck        Card deck   (?start=T2  ?mode=learning)
 export default function App() {
@@ -24,6 +27,9 @@ export default function App() {
 
   if (skillId === 'vocabulary') return <VocabularyScreen />
   if (!skill || !skill.enabled) return <Home />
+  if (sectionId === 'templates') {
+    return view ? <TemplateScreen key={view} skill={skill} type={view} /> : <TemplatesIndex skill={skill} />
+  }
   if (!sectionId || !section) return <SkillScreen skill={skill} />
   if (view === 'deck' && section.deck) {
     return <Deck key={routeKey} skill={skill} section={section} params={params} />
