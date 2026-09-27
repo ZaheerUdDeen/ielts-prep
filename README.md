@@ -6,7 +6,7 @@ colour-coded badge, a one-line hook, a visual mnemonic and a concrete example.
 Mark cards **Known** / **Still learning**; progress is saved in your browser
 (localStorage).
 
-Currently populated: **Writing > Intro** (14 cards, T11-T44). Listening, Reading,
+Currently populated: **Writing > Intro** (12 STAR cards: S1-S5, T3, A1-A2, R1-R4). Listening, Reading,
 Speaking and Writing Body 1 / Body 2 / Conclusion are visible as "coming soon".
 
 Built with React + Vite. No UI or gesture library: swiping uses native CSS

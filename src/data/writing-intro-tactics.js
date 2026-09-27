@@ -3,7 +3,11 @@
 //
 // MASTER FORMULA: STAR — the exam-time order in which the tactics fire.
 //   S  Spot the type       -> ids S1..S5 (intro shape by question type)
-//   T  Twist the sentence  -> ids T1..T3 (paraphrase by restructuring)
+//   T  Twist the sentence  -> id  T3     (merge both views into one sentence)
+//      T1 (nominalize the verb) and T2 (flip clause order) were removed on
+//      2026-09-28 — they are sentence-restructuring/grammar-range (GRA) moves,
+//      not Task Response decisions, and are reserved to seed a future GRA
+//      formula. T3 keeps its id (it is still "the third Twist idea").
 //   A  Assert your stance  -> ids A1..A2 (decided position)
 //   R  Refuse clichés      -> ids R1..R4 (banned openers)
 // Array order below IS the deck order (S -> T -> A -> R), and each tactic's
@@ -49,7 +53,7 @@ export const families = [
     name: 'Paraphrase',
     tone: 'teal',
     star: { letter: 'T', word: 'Twist', action: 'Twist the sentence' },
-    tip: 'Change the structure first, the words second.',
+    tip: 'Don’t reword the prompt — merge both views into one coherent sentence.',
   },
   {
     id: 'A',
@@ -163,39 +167,10 @@ export const tactics = [
     example: { label: 'Spot it by', text: 'Two question marks [[?]] [[?]] = preview two things.' },
   },
 
-  // ---------- T · Twist  Paraphrase by restructuring ----------
-  {
-    id: 'T1',
-    family: 'T',
-    polarity: 'do',
-    title: 'Nominalize the verb',
-    hook: 'Turn the action into a thing.',
-    visual: {
-      type: 'morph',
-      from: { text: 'invest', label: 'verb · action' },
-      to: { text: 'invest[[ment]]', label: 'noun · thing' },
-    },
-    example: {
-      before: 'Governments should [[invest]] in public transport',
-      after: '[[Investment]] in public transport by governments…',
-    },
-  },
-  {
-    id: 'T2',
-    family: 'T',
-    polarity: 'do',
-    title: 'Flip the clause order',
-    hook: 'Lead with the effect, trail the cause.',
-    visual: {
-      type: 'swap',
-      top: ['X', 'causes', 'Y'],
-      bottom: ['Y', 'results from', 'X'],
-    },
-    example: {
-      before: 'X [[causes]] Y',
-      after: 'Y [[results largely from]] X',
-    },
-  },
+  // ---------- T · Twist  Merge both views into one sentence ----------
+  // Only T3 lives here. T1 (nominalize the verb) and T2 (flip clause order)
+  // were removed 2026-09-28: they are GRA restructuring moves, not TR content
+  // decisions, and are reserved to seed a future dedicated GRA formula.
   {
     id: 'T3',
     family: 'T',
@@ -208,8 +183,11 @@ export const tactics = [
       output: 'Whether A or B…',
     },
     example: {
-      label: 'One sentence, both views',
-      text: '[[Whether]] school curricula should stay broad [[or]] narrow is debated.',
+      label: 'One sentence, both views · each half needs its own verb',
+      lines: [
+        { tag: 'Do', text: '[[Whether]] curricula [[should stay]] broad [[or]] students [[should focus]] on strengths is debated.' },
+        { tag: 'Not', text: 'Whether curricula or students’ [[strongest subjects]]… (no verb)' },
+      ],
     },
   },
 

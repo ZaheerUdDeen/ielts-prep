@@ -13,7 +13,7 @@ import { TemplateScreen, TemplatesIndex } from './screens/TemplatePractice.jsx'
 //   #/writing/templates         Fill-in-the-blank template list
 //   #/writing/templates/discussion  Template practice for one essay type
 //   #/writing/intro             Section overview
-//   #/writing/intro/deck        Card deck   (?start=T2  ?mode=learning)
+//   #/writing/intro/deck        Card deck   (?start=T3 ?mode=learning)
 export default function App() {
   const { parts, params } = useRoute()
   const [skillId, sectionId, view] = parts
