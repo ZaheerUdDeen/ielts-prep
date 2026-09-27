@@ -8,6 +8,7 @@ import writingBody2 from './writing-body2-tactics.js'
 import writingConclusion from './writing-conclusion-tactics.js'
 import writingFlow from './writing-flow-tactics.js'
 import writingRich from './writing-rich-tactics.js'
+import writingGrammar from './writing-grammar-tactics.js'
 
 export const skills = [
   {
@@ -25,6 +26,7 @@ export const skills = [
       // leaving them browsable like any other section.
       { id: 'flow', label: 'Flow', subtitle: 'FLOW formula', deck: writingFlow, layer: true },
       { id: 'lexical', label: 'Lexical', subtitle: 'RICH formula', deck: writingRich, layer: true },
+      { id: 'grammar', label: 'Grammar', subtitle: 'SAVE formula', deck: writingGrammar, layer: true },
     ],
   },
   { id: 'listening', label: 'Listening', icon: 'headphones', enabled: false, sections: [] },

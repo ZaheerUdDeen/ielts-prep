@@ -62,8 +62,8 @@ function VocabTile() {
 }
 
 // Fixed prose around the section formula words (read from each deck, by
-// section order): the four paragraph formulas, then the two cross-cutting
-// layers (FLOW, RICH).
+// section order): the four paragraph formulas, then the three cross-cutting
+// layers (FLOW, RICH, SAVE).
 const FORMULA_PROSE = [
   'Reach for a ',
   ', build your ',
@@ -71,7 +71,8 @@ const FORMULA_PROSE = [
   ', and ',
   ' the deal — staying in ',
   ', keeping it ',
-  '.',
+  ', then ',
+  ' it.',
 ]
 
 function FormulaSentence({ skill }) {
@@ -102,7 +103,7 @@ function FormulaSentence({ skill }) {
 export function SkillScreen({ skill }) {
   const { mastered } = useMastery()
   // The Walkthrough is per-essay-type and per-paragraph; cross-cutting layer
-  // sections (FLOW, RICH) don't vary by type, so it only sees paragraph sections.
+  // sections (FLOW, RICH, SAVE) don't vary by type, so it only sees paragraph sections.
   const paragraphs = useMemo(() => ({ ...skill, sections: skill.sections.filter((s) => !s.layer) }), [skill])
   return (
     <div className="screen">
