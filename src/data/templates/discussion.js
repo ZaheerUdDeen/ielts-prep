@@ -164,7 +164,7 @@ export default {
           words: about(14),
           hint: 'Genuinely distinct from Body 1’s claim — a different angle, one idea.',
         },
-        '. This is because ',
+        '. This arises because ',
         { id: 'argue1', label: 'Argue 1', words: about(11), hint: 'The mechanism: why the claim holds.' },
         '. This, in turn, ',
         {
