@@ -175,7 +175,7 @@ export default {
         },
         '. For example, ',
         { id: 'sample', label: 'Sample', words: about(19), hint: 'One concrete, specific case.' },
-        '. Overall, this equally demonstrates that ',
+        '. This illustrates, with equal force, that ',
         {
           id: 'closer',
           label: 'Closer',
