@@ -227,7 +227,18 @@ function Grid({ head, rows, footer }) {
             <li key={i} className={`v-grid__row v-grid__row--${r.mark || 'plain'}`}>
               <div className="v-grid__cell">
                 <span className="v-grid__label">{r.label}</span>
-                {r.text && <Marked text={r.text} className="v-grid__text" />}
+                {r.text && !r.second && <Marked text={r.text} className="v-grid__text" />}
+                {/* `second`: the row differs by body paragraph (CASE's E2). */}
+                {r.second && (
+                  <>
+                    <span className="v-grid__text">
+                      <b className="v-grid__which">Body 1</b> <Marked text={r.text} />
+                    </span>
+                    <span className="v-grid__text">
+                      <b className="v-grid__which">Body 2</b> <Marked text={r.second} />
+                    </span>
+                  </>
+                )}
                 {r.note && <span className="v-grid__note">{r.note}</span>}
               </div>
               {r.mark && (

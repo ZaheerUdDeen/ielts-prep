@@ -1,8 +1,19 @@
-// Writing > Task 2 > Body paragraph 1 tactics.
-// Source: Obsidian note "Writing/Body1-Guide.md".
+// Writing > Task 2 > Body paragraph tactics (CASE) — used by BOTH body
+// paragraphs. Source: Obsidian note "Writing/Body1-Guide.md" ("Body Paragraph
+// Guide — CASE").
 //
-// Job of Body 1: one claim -> explain it -> prove it with one example.
-// ~85 words, one idea only.
+// Job of each body paragraph: one claim -> explain it -> prove it with one
+// example. ~85 words, one idea only.
+//
+// catalog.js points both the `body1` and `body2` sections at this deck (Body 2
+// used to have its own PAIR deck, retired because its template was identical
+// to CASE). The sections stay separate, so progress is tracked separately
+// (`writing/body1:C1` vs `writing/body2:C1`). What differs for the second body
+// paragraph lives in two additive fields below:
+//   visual.rows[].second   E2's per-type job for the SECOND body paragraph
+//                          (`text` is the first paragraph's job).
+//   secondParagraph        the three extra checks run AFTER CASE on Body 2
+//                          (different angle, equal weight, verdict consistency).
 //
 // MASTER FORMULA: CASE — the exam-time order in which the tactics fire.
 //   C  Claim   -> ids C1..C2 (topic sentence: the idea is the subject, one idea)
@@ -64,8 +75,8 @@ export const formula = {
   id: 'CASE',
   type: 'formula',
   word: 'CASE',
-  title: 'The Body 1 formula',
-  why: 'You can’t argue a claim you haven’t stated, and the concession only makes sense once the case exists — Claim always comes first.',
+  title: 'The body paragraph formula',
+  why: 'You can’t argue a claim you haven’t stated, and the concession only makes sense once the case exists — Claim always comes first. Build it twice: once per body paragraph.',
 }
 
 export const tactics = [
@@ -245,22 +256,47 @@ export const tactics = [
     family: 'E',
     polarity: 'do',
     title: 'Match the job to the essay type',
-    hook: 'Discussion ≠ Opinion — know which job this paragraph has.',
+    hook: 'Discussion ≠ Opinion — and Body 1 ≠ Body 2. Know which job this paragraph has.',
     visual: {
       type: 'grid',
-      head: ['Essay type · Body 1’s job', 'Concede?'],
+      head: ['Essay type · This paragraph’s job', 'Concede?'],
       rows: [
-        { type: 'opinion', label: 'Opinion', text: 'State my first reason', mark: 'yes' },
+        {
+          type: 'opinion',
+          label: 'Opinion',
+          text: 'My first reason',
+          second: 'My second reason (or a concession, then rebuttal)',
+          mark: 'yes',
+        },
         {
           type: 'discussion',
           label: 'Discussion',
           text: 'Present View 1 at its strongest, fairly — this IS the rival view',
+          second: 'View 2, presented fairly — same treatment as View 1',
           mark: 'no',
           note: 'Attacking / hedging caps TR at 6.0',
         },
-        { type: 'adv-dis', label: 'Advantages / Disadvantages', text: 'One developed advantage (or disadvantage)', mark: 'opt' },
-        { type: 'problem-solution', label: 'Problem / Solution', text: 'One developed problem', mark: 'no' },
-        { type: 'two-part', label: 'Two-part question', text: 'Answer to Question 1 only', mark: 'no' },
+        {
+          type: 'adv-dis',
+          label: 'Advantages / Disadvantages',
+          text: 'One developed advantage',
+          second: '2 disadvantages, developed',
+          mark: 'opt',
+        },
+        {
+          type: 'problem-solution',
+          label: 'Problem / Solution',
+          text: 'One developed problem',
+          second: 'Solutions that map onto the specific problems named in Body 1',
+          mark: 'no',
+        },
+        {
+          type: 'two-part',
+          label: 'Two-part question',
+          text: 'Answer to Question 1 only',
+          second: 'Answer to Question 2 only',
+          mark: 'no',
+        },
       ],
       footer:
         'Discussion fairness test: could someone who actually holds this view read your paragraph and agree you were fair? If no, rewrite it.',
@@ -280,4 +316,39 @@ export const tactics = [
   },
 ]
 
-export default { families, tactics, formula }
+// Second body paragraph only: three extra checks run AFTER CASE, not instead
+// of it (Body1-Guide.md, "If this is your second body paragraph"). Not tactic
+// cards — the Walkthrough shows them as a final Body 2 step and the Body 2
+// section overview lists them. `types` adds a note for those essay types only.
+export const secondParagraph = {
+  intro: 'Same CASE mechanics as Body 1 — but pick a genuinely new angle, not Body 1’s point in new words.',
+  star: { letter: '+', word: 'Check', action: 'Check it against Body 1' },
+  tone: 'rose',
+  tip: 'Body 2 has something to contradict or fall short of. Run these three after CASE.',
+  checks: [
+    {
+      id: '1',
+      title: 'Different-angle test',
+      text: 'Could you delete Body 1 and still need this paragraph to make a distinct point? If it collapses without Body 1’s wording, it’s not a new angle.',
+    },
+    {
+      id: '2',
+      title: 'Equal weight',
+      text: 'Roughly the same depth and word count as Body 1, with its own concrete example — a thin echo is capped even when the opinion is good.',
+      types: {
+        'two-part': 'Question 2 gets its own full paragraph — not a clause inside Body 1. Missing a part caps TR near 5.0.',
+        'adv-dis': 'Disadvantages get a full paragraph of their own — not a clause tacked onto Body 1.',
+      },
+    },
+    {
+      id: '3',
+      title: 'Verdict consistency',
+      text: 'Before the last sentence, reread the intro’s position. If Body 2 drifts to the opposite side, the essay argues against itself.',
+      types: {
+        'adv-dis': 'Close the loop here: say which outweighs (“…these costs outweigh the benefits described above”). Listing without weighing caps TR around 5.5.',
+      },
+    },
+  ],
+}
+
+export default { families, tactics, formula, secondParagraph }

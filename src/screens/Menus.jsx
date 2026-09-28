@@ -61,39 +61,47 @@ function VocabTile() {
   )
 }
 
-// Fixed prose around the section formula words (read from each deck, by
-// section order): the four paragraph formulas, then the three cross-cutting
-// layers (FLOW, RICH, SAVE).
-const FORMULA_PROSE = [
+// Fixed prose around the formula words. Strings are prose; `{ section }`
+// entries become a link whose word/tones come from that section's deck. Body 1
+// and Body 2 share the CASE deck, so CASE appears once ("build your CASE
+// twice") and links to Body 1, the canonical deck.
+const FORMULA_SENTENCE = [
   'Reach for a ',
+  { section: 'intro' },
   ', build your ',
-  ', find its ',
-  ', and ',
+  { section: 'body1' },
+  ' twice, and ',
+  { section: 'conclusion' },
   ' the deal — staying in ',
+  { section: 'flow' },
   ', keeping it ',
+  { section: 'lexical' },
   ', then ',
+  { section: 'grammar' },
   ' it.',
 ]
 
 function FormulaSentence({ skill }) {
   return (
     <p className="formula-line">
-      {FORMULA_PROSE.map((text, i) => {
-        const section = skill.sections[i]
-        const word = section && (section.deck?.formula?.word || section.label)
+      {FORMULA_SENTENCE.map((part, i) => {
+        if (typeof part === 'string') return <span key={i}>{part}</span>
+        const section = skill.sections.find((s) => s.id === part.section)
+        if (!section) return null
+        const word = section.deck?.formula?.word || section.label
         return (
-          <span key={i}>
-            {text}
-            {word && (
-              <a className="formula-line__word" href={`#/${skill.id}/${section.id}`} aria-label={`${word}: ${section.label}`}>
-                {[...word].map((ch, k) => (
-                  <span key={k} className={`tone-${section.deck?.families[k]?.tone || 'none'}`}>
-                    {ch}
-                  </span>
-                ))}
-              </a>
-            )}
-          </span>
+          <a
+            key={i}
+            className="formula-line__word"
+            href={`#/${skill.id}/${section.id}`}
+            aria-label={`${word}: ${section.label}`}
+          >
+            {[...word].map((ch, k) => (
+              <span key={k} className={`tone-${section.deck?.families[k]?.tone || 'none'}`}>
+                {ch}
+              </span>
+            ))}
+          </a>
         )
       })}
     </p>
@@ -138,6 +146,28 @@ function TemplateCta({ skill }) {
       </span>
       <Icon name="next" size={20} />
     </button>
+  )
+}
+
+function SecondParagraphChecks({ extra }) {
+  return (
+    <li className={`family tone-${extra.tone}`}>
+      <div className="family__head">
+        <span className="family__letter">{extra.star.letter}</span>
+        <span className="family__titles">
+          <span className="family__name">{extra.star.action}</span>
+          <span className="family__legacy">Body 2 only</span>
+        </span>
+      </div>
+      <p className="family__tip">{extra.intro} {extra.tip}</p>
+      <ol className="family__checks">
+        {extra.checks.map((c) => (
+          <li key={c.id}>
+            <strong>{c.title}.</strong> {c.text}
+          </li>
+        ))}
+      </ol>
+    </li>
   )
 }
 
@@ -250,6 +280,10 @@ export function SectionScreen({ skill, section }) {
               </li>
             )
           })}
+          {/* Body 2 shares Body 1's CASE deck; its only extra is three checks run after CASE. */}
+          {section.pass === 2 && section.deck.secondParagraph && (
+            <SecondParagraphChecks extra={section.deck.secondParagraph} />
+          )}
         </ul>
       </main>
     </div>

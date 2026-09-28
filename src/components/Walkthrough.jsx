@@ -2,14 +2,25 @@
 //
 // 1. The user taps the intro deck's first family (Spot) and picks one of its
 //    tactics — each Spot tactic IS an essay type (S1 Opinion … S5 Two-part).
-// 2. Every later family (rest of STAR, then CASE, PAIR, SEAL) becomes one step
-//    of a linear accordion, filtered for that type.
+// 2. Every later family (rest of STAR, then CASE for Body 1, CASE again for
+//    Body 2, then SEAL) becomes one step of a linear accordion, filtered for
+//    that type.
+//
+// Body 1 and Body 2 are separate catalog sections sharing ONE deck (CASE), so
+// the section loop visits that deck twice with no special casing. The Body 2
+// section carries `pass: 2`, which changes three things:
+//   - grid rows with a `second` field show that text (E2's Body 2 job);
+//   - the section header shows the deck's `secondParagraph.intro` (new angle);
+//   - one extra step follows its families: `secondParagraph.checks`, the three
+//     checks run after CASE (different angle, equal weight, verdict), with
+//     per-type notes from `checks[].types`.
 //
 // Nothing here is hand-written per type: the filtering reads two additive
 // fields in the deck data files —
 //   tactic.type           Spot tactics only: the essay-type key that tactic is.
 //   visual.rows[].type    Grid rows that describe one essay type. The step
 //                         surfaces only the selected type's row.
+//   visual.rows[].second  That row's text for the second body paragraph.
 //   tactic.appliesToType  The tactic only applies to that one type; any other
 //                         type sees it as a "skip" line.
 // Type keys: 'opinion' | 'discussion' | 'adv-dis' | 'problem-solution' | 'two-part'.
@@ -27,6 +38,15 @@ const MARK_WORD = { yes: 'Yes', no: 'No', opt: 'Optional' }
 const deckHref = (skillId, sectionId, tacticId) => `#/${skillId}/${sectionId}/deck?start=${tacticId}`
 
 const typeRows = (t) => (t.visual?.rows || []).filter((r) => r.type)
+
+/** On a second-pass section (Body 2), a row's `second` text replaces `text`. */
+const forPass = (section, row) => (section.pass === 2 && row.second ? { ...row, text: row.second } : row)
+
+/** Body 2's extra step: the shared deck's `secondParagraph` checks. */
+function resolveChecks(extra, type) {
+  const items = extra.checks.map((c) => ({ kind: 'check', c, note: c.types?.[type] }))
+  return { varies: items.some((i) => i.note), items }
+}
 
 /** Resolve one family for the selected type into renderable items. */
 function resolveFamily(section, family, spot, labels) {
@@ -46,21 +66,21 @@ function resolveFamily(section, family, spot, labels) {
     if (rows.length) {
       varies = true
       const row = rows.find((r) => r.type === type)
-      if (row) return { kind: 'tactic', t, row }
+      if (row) return { kind: 'tactic', t, row: forPass(section, row) }
       return { kind: 'skip', t, only: rows.map((r) => r.label).join(' and '), plain: section.id === 'conclusion' }
     }
     return { kind: 'tactic', t }
   })
 
-  // Every tactic in this family is for some other type (PAIR's Answer for,
-  // say, Discussion): collapse them into one pointer at the section's own
-  // type table, which says what this paragraph's job is for the chosen type.
+  // Every tactic in this family is for some other type: collapse them into
+  // one pointer at the section's own type table, which says what this
+  // paragraph's job is for the chosen type.
   if (items.length && items.every((i) => i.kind === 'skip')) {
     const table = all.find((t) => typeRows(t).some((r) => r.type === type))
     const row = table && typeRows(table).find((r) => r.type === type)
     return {
       varies,
-      items: [{ kind: 'pointer', skipped: items, table, row }],
+      items: [{ kind: 'pointer', skipped: items, table, row: row && forPass(section, row) }],
     }
   }
 
@@ -93,6 +113,20 @@ function RowCallout({ tactic, row, typeLabel }) {
       )}
       {row.note && <span className="wt-row__note">{row.note}</span>}
     </div>
+  )
+}
+
+function CheckItem({ item }) {
+  const { c, note } = item
+  return (
+    <li className="wt-tactic">
+      <div className="wt-tactic__top">
+        <span className="wt-id">{c.id}</span>
+      </div>
+      <strong className="wt-tactic__title">{c.title}</strong>
+      <p className="wt-tactic__hook">{c.text}</p>
+      {note && <p className="wt-check__note">{note}</p>}
+    </li>
   )
 }
 
@@ -204,6 +238,8 @@ export function Walkthrough({ skill, mastered }) {
         if (section === intro && family === spotFamily) return
         steps.push({ section, family, ...resolveFamily(section, family, spot, labels) })
       })
+      const extra = section.pass === 2 && section.deck.secondParagraph
+      if (extra) steps.push({ section, family: { id: 'check', ...extra }, ...resolveChecks(extra, spot.type) })
     })
   }
 
@@ -315,6 +351,9 @@ export function Walkthrough({ skill, mastered }) {
                       <span className="wt-section__label">{s.section.label}</span>
                     </h2>
                   )}
+                  {firstOfSection && s.section.pass === 2 && s.section.deck.secondParagraph && (
+                    <p className="wt-pass-note">{s.section.deck.secondParagraph.intro}</p>
+                  )}
                   <div
                     ref={(el) => {
                       stepRefs.current[i] = el
@@ -355,6 +394,7 @@ export function Walkthrough({ skill, mastered }) {
                         )}
                         <ul className="wt-items">
                           {s.items.map((item, k) => {
+                            if (item.kind === 'check') return <CheckItem key={item.c.id} item={item} />
                             if (item.kind === 'pointer') {
                               return (
                                 <PointerItem

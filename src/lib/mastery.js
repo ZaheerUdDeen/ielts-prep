@@ -12,7 +12,24 @@ function read() {
   }
 }
 
-let snapshot = read()
+// One-time cleanup (2026-09): Body 2's PAIR deck was retired and `body2` now
+// shows the CASE deck. Old `writing/body2:*` keys were PAIR progress — and
+// PAIR's A1/A2 share ids with CASE's A1/A2 — so they'd misreport Body 2 as
+// partly mastered. Drop them once; Body 1's keys are untouched.
+const PAIR_RETIRED_KEY = 'ielts-prep:v1:migrated-pair-retired'
+function dropPairProgress(state) {
+  try {
+    if (localStorage.getItem(PAIR_RETIRED_KEY)) return state
+    const next = Object.fromEntries(Object.entries(state).filter(([k]) => !k.startsWith('writing/body2:')))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+    localStorage.setItem(PAIR_RETIRED_KEY, '1')
+    return next
+  } catch {
+    return state
+  }
+}
+
+let snapshot = dropPairProgress(read())
 
 function write(next) {
   snapshot = next
